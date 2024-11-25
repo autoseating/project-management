@@ -1,0 +1,182 @@
+/* Specific styles for the add project form */
+.addProject {
+    display: flex;
+    align-items: baseline;
+    justify-content: center;
+    padding: 40px 20px; /* More space from top and bottom of the container */
+}
+
+.addprojectBody {
+    border: 1px solid #e0e0e0;
+    width: 60%;
+    max-width: 900px;
+    height: auto;
+    background-color: #fff;
+    border-radius: 10px;
+    padding: 10px 30px; /* More space from top and bottom inside the form */
+    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Header within the form */
+.addProjectNav {
+    text-align: center;
+    font-size: 1.2rem;
+    color: #333;
+    font-weight: 500;
+    margin-bottom: 25px;  /* Added some space below the navigation */
+    border-bottom: 2px solid #333; /* Changed border color to dark gray */
+    padding-bottom: 10px;
+}
+
+/* Form structure */
+.addProjectForm {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 30px; /* Increased gap between fields */
+}
+
+.addProjectForm .addProjectField {
+    margin-bottom: 20px; /* Space between input fields */
+}
+
+/* Labels for form fields */
+.addProjectForm .form-label {
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: #444;
+    margin-bottom: 8px;  /* Added some space under labels */
+}
+
+/* Input fields and selects */
+.addProjectForm .form-control {
+    width: 100%;
+    padding: 10px; /* Slightly reduced padding */
+    font-size: 0.875rem; /* Smaller font size for inputs */
+    color: #333;
+    background-color: #fff;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    transition: all 0.3s ease;
+    margin-top: 8px; /* Added some space from the top */
+    margin-bottom: 15px; /* Added some space from the bottom */
+}
+
+/* Remove blue focus color and outline */
+.addProjectForm .form-control:focus {
+    border-color: #ccc; /* Neutral border color */
+    box-shadow: none;
+    outline: none;
+}
+
+/* Specific styles for description textarea */
+.addProjectForm .description-textarea {
+    padding: 12px;
+    font-size: 0.875rem; /* Slightly smaller font size */
+    color: #333;
+    background-color: #fff;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+    resize: vertical;
+    height: 120px;
+    transition: all 0.3s ease;
+    margin-top: 8px;
+}
+
+.addProjectForm .description-textarea:focus {
+    border-color: #ccc; /* Neutral border color */
+    box-shadow: none;
+    outline: none;
+}
+
+/* File upload input */
+.addProjectForm .upload-files-input {
+    padding: 12px 20px;
+    font-size: 0.875rem; /* Smaller font size for file input */
+    background-color: #5e5e5e;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin-top: 10px;
+}
+
+.addProjectForm .upload-files-input:hover {
+    background-color: #333;
+}
+
+/* Button styles */
+.addProjectForm button {
+    padding: 12px 25px;
+    background-color: #5e5e5e;
+    border: none;
+    color: white;
+    font-size: 0.95rem;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin-top: 15px; /* Added space above the button */
+}
+
+.addProjectForm button:hover {
+    background-color: #333;
+}
+
+/* Team member icon styles */
+.addProjectForm .team-member-icon {
+    margin-top: 7px;
+    width: 40px;
+    height: 40px;
+    border: 1px solid gray;
+    border-radius: 100px;
+}
+
+/* Add team icons layout */
+.addProjectForm .addTeamIcons {
+    gap: 5px;
+}
+
+/* Media query for responsive design */
+@media (max-width: 768px) {
+    .addProjectForm {
+        grid-template-columns: 1fr; /* Stack the form fields on smaller screens */
+    }
+
+    .addprojectBody {
+        width: 90%; /* Increase width to 90% on small screens */
+        padding: 20px; /* Adjust padding to fit content */
+    }
+
+    .addProjectNav {
+        font-size: 1.1rem; /* Reduce font size for smaller screens */
+        margin-bottom: 15px;
+    }
+
+    .addProjectForm .form-control {
+        padding: 12px; /* Slightly more padding for inputs */
+    }
+
+    .addProjectForm .description-textarea {
+        height: 150px; /* Adjust textarea height for better visibility */
+    }
+
+    .addProjectForm .upload-files-input {
+        width: 100%; /* Full width for the file upload input */
+    }
+
+    .addProjectForm button {
+        width: 100%; /* Make the button full width on smaller screens */
+    }
+
+    .addProjectForm .team-member-icon {
+        width: 35px;
+        height: 35px;
+    }
+
+    /* Adjusting header text for smaller screens */
+    .addProjectNav {
+        font-size: 1.1rem;
+        margin-bottom: 15px;
+    }
+}

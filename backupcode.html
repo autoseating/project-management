@@ -1,0 +1,2453 @@
+Add Task Page
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Project Management</title>
+  <!-- Google Font for professional look -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+  <script src="https://kit.fontawesome.com/4b2636911a.js" crossorigin="anonymous"></script>
+  <!-- Material Icons for Hamburger Icon and Dropdown -->
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <link rel="stylesheet" href="common.css"> 
+  <link rel="stylesheet" href="Css/AddTask.css">
+</head>
+<body>
+
+    <div class="main">
+        <!-- Navbar -->
+        <div class="navbar">
+            <button class="btn" id="toggleSidebarBtn">
+            <span class="material-icons" style="background: none;" >menu</span> <!-- Hamburger Icon -->
+            </button>
+            <p>Allabout Seat</p>
+        </div>
+
+        <!-- Sidebar -->
+        <div class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+            <p>Project Management</p>
+            <button class="close-btn" id="closeSidebarBtn"><i class="fa-solid fa-chevron-left"></i></button>
+            </div>
+            <ul>
+            <li><a href="ProjectManagement.html">Home</a></li>
+            <li><a href="AddEmployee.html">Add Employee</a></li>
+            <li><a href="AddProject.html">Add Project</a></li>
+            <li><a href="#">Add Task</a></li>
+            </ul>
+
+            <!-- Dropdown for Projects -->
+            <div class="dropdown" id="projectsDropdown">
+            <button id="projectsBtn">
+                Projects
+                <span class="material-icons">expand_more</span>  <!-- Dropdown icon -->
+            </button>
+            <div class="dropdown-content">
+                <a href="#">JLR</a>
+                <a href="#">CAMACO</a>
+                <a href="#">BENCHMARKING WEBSITE</a>
+            </div>
+            </div>
+        </div>
+
+        <!-- Main Container -->
+        <div class="mainContainer">
+            <div class="addTaskdiv">
+                <div class="add-task-btn-container">
+                    <button id="add-task-btn" class="btn" onclick="addTask()">+ Add Task</button>
+                    <button id="add-column-btn" class="btn" onclick="addColumn()">+ Add Column</button>
+                </div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Task ID</th>
+                            <th>Task Name</th>
+                            <th>Assignee</th>
+                            <th>Due Date</th>
+                            <th>Status</th>
+                            <th>Priority</th>
+                            <th class="inpFile">Upload Files</th>
+                        </tr>
+                    </thead>
+                    <tbody id="task-table-body">
+                        <tr>
+                            <td>001</td>
+                            <td>
+                                <div class="flexitems3">
+                                    <input type="text" class="task-input" placeholder="Task 1" onblur="updateTaskName(this, 1)"/>
+                                    <button class="btn btn1" onclick="showSubtaskInput(1)">+</button>
+                                    <button class="btn btn1" onclick="editTask(1)">✎</button>
+                                    <button class="btn btn1" onclick="deleteTask(1)">-</button>
+                                </div>
+                                <div id="subtask-container-1" class="subtask-container"></div>
+                            </td>
+                            <td><div class="assigneeNames dflex"> <i class="fa-solid fa-user-plus"></i> <button class="addAssigneeBtn" onclick="addAssignee(1)">Add Assignee</button></div></td>
+                            <td>2024-08-30</td>
+                            <td>In Progress</td>
+                            <td>High</td>
+                            <td><input type="file"></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+
+
+  <script>
+        let taskCount = 1;
+        let subtaskCount = {};
+        let subSubtaskCount = {};
+        let columnCount = 7; // Initial column count excluding new columns
+ 
+        // Function to add assignee dynamically
+        z
+ 
+        // Function to add new task row
+        function addTask() {
+        taskCount += 1;
+
+        const newTaskRow = document.createElement('tr');
+        newTaskRow.setAttribute('data-task-id', taskCount); // Set data-task-id to uniquely identify the row
+        newTaskRow.innerHTML = `
+            <td>${taskCount.toString().padStart(3, '0')}</td>
+            <td>
+                <div class="flexitems3">
+                    <input type="text" class="task-input" placeholder="New Task" onblur="updateTaskName(this, ${taskCount})"/>
+                    <button class="btn btn1" onclick="showSubtaskInput(${taskCount})">+</button>
+                    <button class="btn btn1" onclick="editTask(${taskCount})">✎</button>
+                    <button class="btn btn1" onclick="deleteTask(${taskCount})"><i class="fa-solid fa-trash"></i></button>
+                </div>
+                <div id="subtask-container-${taskCount}" class="subtask-container"></div>
+            </td>
+            <td><div class="assigneeNames"> <i class="fa-solid fa-user-plus"></i> <button class="addAssigneeBtn" onclick="addAssignee(${taskCount})">Add Assignee</button> </div></td>
+            <td>2024-08-30</td>
+            <td>In Progress</td>
+            <td>High</td>
+            <td><input type="file"></td>
+        `;
+        
+        // Add additional columns
+        for (let i = 8; i <= columnCount; i++) {
+            const cell = document.createElement('td');
+            cell.innerHTML = `<input type="text" placeholder="New Field">`;
+            newTaskRow.appendChild(cell);
+        }
+
+        document.getElementById('task-table-body').appendChild(newTaskRow);
+    }
+
+    // Function to update task name when user types
+    function updateTaskName(input, taskId) {
+        const taskName = input.value.trim();
+        if (taskName) {
+            input.placeholder = taskName; // Update placeholder to show the task name
+        } else {
+            input.placeholder = "Task name required"; // Notify user
+        }
+    }
+
+    // Function to edit task
+    function editTask(taskId) {
+        const input = document.querySelector(`tr[data-task-id="${taskId}"] .task-input`);
+        input.focus(); // Focus on the input for immediate editing
+
+        input.onkeypress = function(event) {
+            if (event.key === 'Enter') {
+                saveTaskName(input, taskId);
+            }
+        };
+    }
+
+    // Function to save task name after editing
+    function saveTaskName(input, taskId) {
+        const taskName = input.value.trim();
+        const taskRow = document.querySelector(`tr[data-task-id="${taskId}"]`);
+        const taskNameCell = taskRow.querySelector('td:nth-child(2)');
+
+        if (taskName) {
+            taskNameCell.innerHTML = `
+                <div class="flexitems3">
+                    ${taskName}
+                    <button class="btn btn1" onclick="showSubtaskInput(${taskId})">+</button>
+                    <button class="btn btn1" onclick="editTask(${taskId})">✎</button>
+                    <button class="btn btn1" onclick="deleteTask(${taskId})"><i class="fa-solid fa-trash"></i></button>
+                </div>
+            `;
+        }
+        input.value = ''; // Clear input
+    }
+
+    // Function to delete task
+    function deleteTask(taskId) {
+        if (taskId === 1) {
+            alert("The first task cannot be deleted.");
+            return; // Prevent deletion of the first task
+        }
+        const row = document.querySelector(`tr[data-task-id="${taskId}"]`);
+        if (row) {
+            row.remove(); // Remove the task row
+        }
+    }
+        // Function to add a new column
+        function addColumn() {
+            const columnName = prompt("Enter the name for the new column:");
+            if (columnName) {
+                columnCount += 1;
+ 
+                // Add the new column header
+                const headerRow = document.querySelector('thead tr');
+                const newHeaderCell = document.createElement('th');
+                newHeaderCell.innerHTML = `
+                    ${columnName}
+                    <button onclick="renameColumn(${columnCount})">Rename</button>
+                    <button onclick="deleteColumn(${columnCount})">Delete</button>
+                `;
+                headerRow.appendChild(newHeaderCell);
+ 
+                // Add the new column to existing tasks
+                const taskRows = document.querySelectorAll('#task-table-body tr');
+                taskRows.forEach(row => {
+                    const newCell = document.createElement('td');
+                    newCell.innerHTML = `<input type="text" placeholder="${columnName}">`;
+                    row.appendChild(newCell);
+                });
+            }
+        }
+ 
+        // Function to rename a column
+        function renameColumn(columnId) {
+            const newColumnName = prompt("Enter new name for the column:");
+            if (newColumnName) {
+                const headerCell = document.querySelector(`thead tr th:nth-child(${columnId})`);
+                headerCell.firstChild.textContent = newColumnName; // Update column name
+            }
+        }
+ 
+        // Function to delete a column
+
+        // Function to delete a column
+        function deleteColumn(columnId) {
+            if (columnId <= 7) {
+                alert("Cannot delete the default columns.");
+                return; // Prevent deletion of default columns
+            }
+ 
+            // Delete the column header
+            const headerRow = document.querySelector('thead tr');
+            const columnToDelete = headerRow.children[columnId - 1]; // Adjust because columnId is 1-based
+            headerRow.removeChild(columnToDelete);
+ 
+            // Delete the column cells from each task row
+            const taskRows = document.querySelectorAll('#task-table-body tr');
+            taskRows.forEach(row => {
+                const cellToDelete = row.children[columnId - 1]; // Adjust because columnId is 1-based
+                row.removeChild(cellToDelete);
+            });
+ 
+            columnCount -= 1; // Decrease column count
+        }
+        
+       
+        // Function to show subtask input
+        function showSubtaskInput(taskId) {
+            const subtaskContainer = document.getElementById(`subtask-container-${taskId}`);
+            const subtaskNameInput = document.createElement('input');
+            subtaskNameInput.type = 'text';
+            subtaskNameInput.placeholder = 'New Subtask';
+            let added = false; // Flag to prevent double addition
+ 
+            const addSubtask = () => {
+                if (!added) {
+                    added = true; // Set flag to true
+                    const subtaskName = subtaskNameInput.value;
+                    if (subtaskName) {
+                        addSubtaskToContainer(taskId, subtaskName);
+                        subtaskContainer.removeChild(subtaskNameInput); // Remove input after adding subtask
+                    }
+                }
+            };
+ 
+            subtaskNameInput.onblur = addSubtask;
+            subtaskNameInput.onkeypress = function(event) {
+                if (event.key === 'Enter') {
+                    addSubtask();
+                }
+            };
+
+            subtaskContainer.appendChild(subtaskNameInput);
+            subtaskNameInput.focus(); // Focus on the input for immediate typing
+            subtaskContainer.style.display = 'block'; // Show subtask container
+        }
+ 
+        // Function to add subtask to the task
+        function addSubtaskToContainer(taskId, subtaskName) {
+            subtaskCount[taskId] = (subtaskCount[taskId] || 0) + 1;
+            const subtaskId = subtaskCount[taskId];
+
+            const subtaskDiv = document.createElement('div');
+            subtaskDiv.className = 'subtask';
+            subtaskDiv.innerHTML = `
+                Subtask ${subtaskId}: ${subtaskName}
+                <button class="btn btn1" onclick="showSubSubtaskInput(${taskId}, ${subtaskId})">+</button>
+                <button class="btn btn1" onclick="editSubtask(${taskId}, ${subtaskId})">✎</button>
+                <button class="btn btn1" onclick="deleteSubtask(${taskId}, ${subtaskId})"><i class="fa-solid fa-trash"></i></button>
+                <button class="btn btn1" onclick="addAssigneeToSubtask(${taskId}, ${subtaskId})">Add Assignee</button>
+                <div id="sub-subtask-container-${taskId}-${subtaskId}" class="sub-subtask-container"></div>
+            `;
+            const subtaskContainer = document.getElementById(`subtask-container-${taskId}`);
+            subtaskContainer.appendChild(subtaskDiv);
+        }
+ 
+        // Function to show sub-subtask input
+        function showSubSubtaskInput(taskId, subtaskId) {
+
+            const subSubtaskContainer = document.getElementById(`sub-subtask-container-${taskId}-${subtaskId}`);
+            const subSubtaskNameInput = document.createElement('input');
+            subSubtaskNameInput.type = 'text';
+            subSubtaskNameInput.placeholder = 'New Sub-subtask';
+            let added = false; // Flag to prevent double addition
+ 
+            const addSubSubtask = () => {
+                if (!added) {
+                    added = true; // Set flag to true
+                    const subSubtaskName = subSubtaskNameInput.value;
+                    if (subSubtaskName) {
+                        addSubSubtaskToContainer(taskId, subtaskId, subSubtaskName);
+                        subSubtaskContainer.removeChild(subSubtaskNameInput); // Remove input after adding sub-subtask
+                    }
+                }
+            };
+ 
+            subSubtaskNameInput.onblur = addSubSubtask;
+            subSubtaskNameInput.onkeypress = function(event) {
+                if (event.key === 'Enter') {
+                    addSubSubtask();
+                }
+            };
+ 
+            subSubtaskContainer.appendChild(subSubtaskNameInput);
+            subSubtaskNameInput.focus(); // Focus on the input for immediate typing
+            subSubtaskContainer.style.display = 'block'; // Show sub-subtask container
+        }
+ 
+        // Function to add sub-subtask to the container
+        function addSubSubtaskToContainer(taskId, subtaskId, subSubtaskName) {
+            subSubtaskCount[`${taskId}-${subtaskId}`] = (subSubtaskCount[`${taskId}-${subtaskId}`] || 0) + 1;
+            const subSubtaskId = subSubtaskCount[`${taskId}-${subtaskId}`];
+
+            const subSubtaskDiv = document.createElement('div');
+            subSubtaskDiv.className = 'sub-subtask';
+            subSubtaskDiv.innerHTML = `
+                Sub-subtask ${subSubtaskId}: ${subSubtaskName}
+                <button class="btn btn1" onclick="editSubSubtask(${taskId}, ${subtaskId}, ${subSubtaskId})">✎</button>
+                <button class="btn btn1" onclick="deleteSubSubtask(${taskId}, ${subtaskId}, ${subSubtaskId})"><i class="fa-solid fa-trash"></i></button>
+                <button class="btn btn1" onclick="addAssigneeToSubSubtask(${taskId}, ${subtaskId}, ${subSubtaskId})">Add Assignee</button>
+            `;
+            const subSubtaskContainer = document.getElementById(`sub-subtask-container-${taskId}-${subtaskId}`);
+            subSubtaskContainer.appendChild(subSubtaskDiv);
+        }
+
+        // Function to edit subtask
+        function editSubtask(taskId, subtaskId) {
+            const subtaskDiv = document.querySelector(`#subtask-container-${taskId} .subtask:nth-child(${subtaskId})`);
+            const subtaskName = subtaskDiv.childNodes[0].textContent.split(': ')[1].trim();
+            const subtaskInput = document.createElement('input');
+            subtaskInput.type = 'text';
+            subtaskInput.value = subtaskName;
+
+            subtaskInput.onblur = function() {
+                saveSubtaskName(subtaskDiv, subtaskInput, taskId, subtaskId);
+            };
+
+            subtaskInput.onkeypress = function(event) {
+                if (event.key === 'Enter') {
+                    saveSubtaskName(subtaskDiv, subtaskInput, taskId, subtaskId);
+                }
+            };
+ 
+            subtaskDiv.replaceChild(subtaskInput, subtaskDiv.childNodes[0]);
+            subtaskInput.focus();
+        }
+
+        // Function to save edited subtask name
+        function saveSubtaskName(subtaskDiv, subtaskInput, taskId, subtaskId) {
+            const newName = subtaskInput.value.trim();
+            if (newName) {
+                subtaskDiv.childNodes[0].textContent = `Subtask ${subtaskId}: ${newName}`;
+            }
+            subtaskDiv.replaceChild(document.createTextNode(`Subtask ${subtaskId}: ${newName}`), subtaskInput);
+        }
+
+        // Function to delete subtask
+        function deleteSubtask(taskId, subtaskId) {
+            const subtaskDiv = document.querySelector(`#subtask-container-${taskId} .subtask:nth-child(${subtaskId})`);
+            if (subtaskDiv) {
+                subtaskDiv.remove();
+            }
+        }
+
+        // Function to edit sub-subtask
+        function editSubSubtask(taskId, subtaskId, subSubtaskId) {
+            const subSubtaskDiv = document.querySelector(`#sub-subtask-container-${taskId}-${subtaskId} .sub-subtask:nth-child(${subSubtaskId})`);
+            const subSubtaskName = subSubtaskDiv.childNodes[0].textContent.split(': ')[1].trim();
+            const subSubtaskInput = document.createElement('input');
+            subSubtaskInput.type = 'text';
+            subSubtaskInput.value = subSubtaskName;
+
+            subSubtaskInput.onblur = function() {
+                saveSubSubtaskName(subSubtaskDiv, subSubtaskInput, taskId, subtaskId, subSubtaskId);
+            };
+
+            subSubtaskInput.onkeypress = function(event) {
+                if (event.key === 'Enter') {
+                    saveSubSubtaskName(subSubtaskDiv, subSubtaskInput, taskId, subtaskId, subSubtaskId);
+                }
+            };
+
+            subSubtaskDiv.replaceChild(subSubtaskInput, subSubtaskDiv.childNodes[0]);
+            subSubtaskInput.focus();
+        }
+
+        // Function to save edited sub-subtask name
+        function saveSubSubtaskName(subSubtaskDiv, subSubtaskInput, taskId, subtaskId, subSubtaskId) {
+            const newName = subSubtaskInput.value.trim();
+            if (newName) {
+                subSubtaskDiv.childNodes[0].textContent = `Sub-subtask ${subSubtaskId}: ${newName}`;
+            }
+            subSubtaskDiv.replaceChild(document.createTextNode(`Sub-subtask ${subSubtaskId}: ${newName}`), subSubtaskInput);
+        }
+
+        // Function to delete sub-subtask
+        function deleteSubSubtask(taskId, subtaskId, subSubtaskId) {
+            const subSubtaskDiv = document.querySelector(`#sub-subtask-container-${taskId}-${subtaskId} .sub-subtask:nth-child(${subSubtaskId})`);
+            if (subSubtaskDiv) {
+                subSubtaskDiv.remove();
+            }
+        }
+
+        function addAssigneeToSubtask(taskId, subtaskId) {
+            const assigneeName = prompt(`Enter Assignee Name for Subtask ${subtaskId}`);
+            if (assigneeName) {
+                const subtaskDiv = document.querySelector(`#subtask-container-${taskId} .subtask:nth-child(${subtaskId})`);
+                const assigneeContainer = document.createElement('div');
+                assigneeContainer.classList.add('assignee');
+                assigneeContainer.innerHTML = `
+                    ${assigneeName} 
+                    <button class="edit-btn" onclick="editAssignee(${taskId}, ${subtaskId}, '${assigneeName}')">Edit</button>
+                    <button class="delete-assignee-btn" onclick="deleteAssignee(${taskId}, ${subtaskId})">-</button>
+                `;
+                subtaskDiv.appendChild(assigneeContainer);
+            }
+        }
+
+        // Function to add assignee to sub-subtask
+        function addAssigneeToSubSubtask(taskId, subtaskId, subSubtaskId) {
+            const assigneeName = prompt(`Enter Assignee Name for Sub-subtask ${subSubtaskId}`);
+            if (assigneeName) {
+                const subSubtaskDiv = document.querySelector(`#sub-subtask-container-${taskId}-${subtaskId} .sub-subtask:nth-child(${subSubtaskId})`);
+                const assigneeContainer = document.createElement('div');
+                assigneeContainer.classList.add('assignee');
+                assigneeContainer.innerHTML = `
+                    ${assigneeName} 
+                    <button class="edit-btn" onclick="editAssignee(${taskId}, ${subtaskId}, ${subSubtaskId}, '${assigneeName}')">Edit</button>
+                    <button class="delete-assignee-btn" onclick="deleteAssignee(${taskId}, ${subtaskId}, ${subSubtaskId})">-</button>
+                `;
+                subSubtaskDiv.appendChild(assigneeContainer);
+            }
+        }
+
+        function deleteAssignee(taskId, subtaskId) {
+            const assigneeContainer = document.querySelector(`#subtask-container-${taskId} .subtask:nth-child(${subtaskId}) .assignee`);
+            if (assigneeContainer) {
+                assigneeContainer.remove();
+            }
+        }
+
+        // Function to delete assignee from sub-subtask
+        function deleteAssignee(taskId, subtaskId, subSubtaskId) {
+            const assigneeContainer = document.querySelector(`#sub-subtask-container-${taskId}-${subtaskId} .sub-subtask:nth-child(${subSubtaskId}) .assignee`);
+            if (assigneeContainer) {
+                assigneeContainer.remove();
+            }
+        }
+  </script>
+
+
+  <script src="common.js"></script>
+
+
+</body>
+</html>
+
+<!-- All options--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Project Management</title>
+  <!-- Google Font for professional look -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+  <script src="https://kit.fontawesome.com/4b2636911a.js" crossorigin="anonymous"></script>
+  <!-- Material Icons for Hamburger Icon and Dropdown -->
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <link rel="stylesheet" href="common.css"> 
+  <link rel="stylesheet" href="Css/AddTask.css">
+</head>
+<body>
+
+    <div class="main">
+        <!-- Navbar -->
+        <div class="navbar">
+            <button class="btn" id="toggleSidebarBtn">
+            <span class="material-icons" style="background: none;" >menu</span> <!-- Hamburger Icon -->
+            </button>
+            <p>Allabout Seat</p>
+        </div>
+
+        <!-- Sidebar -->
+        <div class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+            <p>Project Management</p>
+            <button class="close-btn" id="closeSidebarBtn"><i class="fa-solid fa-chevron-left"></i></button>
+            </div>
+            <ul>
+            <li><a href="ProjectManagement.html">Home</a></li>
+            <li><a href="AddEmployee.html">Add Employee</a></li>
+            <li><a href="AddProject.html">Add Project</a></li>
+            <li><a href="#">Add Task</a></li>
+            </ul>
+
+            <!-- Dropdown for Projects -->
+            <div class="dropdown" id="projectsDropdown">
+            <button id="projectsBtn">
+                Projects
+                <span class="material-icons">expand_more</span>  <!-- Dropdown icon -->
+            </button>
+            <div class="dropdown-content">
+                <a href="#">JLR</a>
+                <a href="#">CAMACO</a>
+                <a href="#">BENCHMARKING WEBSITE</a>
+            </div>
+            </div>
+        </div>
+
+        <!-- Main Container -->
+        <div class="mainContainer">
+            <div class="addTaskdiv">
+                <div class="add-task-btn-container">
+                    <button id="add-task-btn" class="btn" onclick="addTask()">+ Add Task</button>
+                    <button id="add-column-btn" class="btn" onclick="addColumn()">+ Add Column</button>
+                </div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Task ID</th>
+                            <th>Task Name</th>
+                            <th>Assignee</th>
+                            <th>Due Date</th>
+                            <th>Status</th>
+                            <th>Priority</th>
+                            <th class="inpFile">Upload Files</th>
+                        </tr>
+                    </thead>
+                    <tbody id="task-table-body">
+                        <tr>
+                            <td>001</td>
+                            <td>
+                                <div class="flexitems3">
+                                    <input type="text" class="task-input" placeholder="Task 1" onblur="updateTaskName(this, 1)"/>
+                                    <button class="btn btn1" onclick="showSubtaskInput(1)">+</button>
+                                    <button class="btn btn1" onclick="editTask(1)">✎</button>
+                                    <button class="btn btn1" onclick="deleteTask(1)">-</button>
+                                </div>
+                                <div id="subtask-container-1" class="subtask-container"></div>
+                            </td>
+                            <td><div class="assigneeNames dflex"> <i class="fa-solid fa-user-plus"></i> <button class="addAssigneeBtn" onclick="addAssignee(1)">Add Assignee</button></div></td>
+                            <td>2024-08-30</td>
+                            <td>In Progress</td>
+                            <td>High</td>
+                            <td><input type="file"></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+
+
+  <script>
+        let taskCount = 1;
+        let subtaskCount = {};
+        let subSubtaskCount = {};
+        let columnCount = 7; // Initial column count excluding new columns
+ 
+        // Function to add assignee dynamically
+        function addAssignee(taskId) {
+            const assigneeNameCell = document.querySelector(`#task-table-body tr[data-task-id="${taskId}"] td:nth-child(3)`);
+            const assignee = prompt('Enter Assignee Name');
+            if (assignee) {
+                assigneeNameCell.innerHTML = `<div class="dflex" id="assignee-${taskId}"> 
+                    <p>${assignee}</p>
+                    <button class="edit-btn" onclick="editText(${taskId})">Edit</button>
+                    <button class="delete-assignee-btn" onclick="deleteAssignee(${taskId})">-</button>
+                </div>`;
+            }
+        }
+
+ 
+        function deleteAssignee(taskId){
+            const assigneeName = document.querySelector(`#task-table-body tr:nth-child(${taskId}) .assigneeNames`);
+            assigneeName.innerHTML = '<div class="assigneeNames dflex"> <i class="fa-solid fa-user-plus"></i> <button class="addAssigneeBtn" onclick="addAssignee('+taskId+')">Add Assignee</button> </div>';
+        }
+ 
+        // Function to edit assignee name
+        function editText(taskId) {
+            const assigneeName = document.querySelector(`#task-table-body tr:nth-child(${taskId}) .assigneeNames p`);
+            const currentAssignee = assigneeName.textContent;
+            const newAssignee = prompt("Change assignee", currentAssignee);
+            if (newAssignee) {
+                assigneeName.textContent = newAssignee;
+            }
+        }
+ 
+        // Function to add new task row
+        function addTask() {
+        taskCount += 1;
+
+        const newTaskRow = document.createElement('tr');
+        newTaskRow.setAttribute('data-task-id', taskCount); // Set data-task-id to uniquely identify the row
+        newTaskRow.innerHTML = `
+            <td>${taskCount.toString().padStart(3, '0')}</td>
+            <td>
+                <div class="flexitems3">
+                    <input type="text" class="task-input" placeholder="New Task" onblur="updateTaskName(this, ${taskCount})"/>
+                    <button class="btn btn1" onclick="showSubtaskInput(${taskCount})">+</button>
+                    <button class="btn btn1" onclick="editTask(${taskCount})">✎</button>
+                    <button class="btn btn1" onclick="deleteTask(${taskCount})"><i class="fa-solid fa-trash"></i></button>
+                </div>
+                <div id="subtask-container-${taskCount}" class="subtask-container"></div>
+            </td>
+            <td><div class="assigneeNames"> <i class="fa-solid fa-user-plus"></i> <button class="addAssigneeBtn" onclick="addAssignee(${taskCount})">Add Assignee</button> </div></td>
+            <td>2024-08-30</td>
+            <td>In Progress</td>
+            <td>High</td>
+            <td><input type="file"></td>
+        `;
+        
+        // Add additional columns
+        for (let i = 8; i <= columnCount; i++) {
+            const cell = document.createElement('td');
+            cell.innerHTML = `<input type="text" placeholder="New Field">`;
+            newTaskRow.appendChild(cell);
+        }
+
+        document.getElementById('task-table-body').appendChild(newTaskRow);
+    }
+
+    // Function to update task name when user types
+    function updateTaskName(input, taskId) {
+        const taskName = input.value.trim();
+        if (taskName) {
+            input.placeholder = taskName; // Update placeholder to show the task name
+        } else {
+            input.placeholder = "Task name required"; // Notify user
+        }
+    }
+
+    // Function to edit task
+    function editTask(taskId) {
+        const input = document.querySelector(`tr[data-task-id="${taskId}"] .task-input`);
+        input.focus(); // Focus on the input for immediate editing
+
+        input.onkeypress = function(event) {
+            if (event.key === 'Enter') {
+                saveTaskName(input, taskId);
+            }
+        };
+    }
+
+    // Function to save task name after editing
+    function saveTaskName(input, taskId) {
+        const taskName = input.value.trim();
+        const taskRow = document.querySelector(`tr[data-task-id="${taskId}"]`);
+        const taskNameCell = taskRow.querySelector('td:nth-child(2)');
+
+        if (taskName) {
+            taskNameCell.innerHTML = `
+                <div class="flexitems3">
+                    ${taskName}
+                    <button class="btn btn1" onclick="showSubtaskInput(${taskId})">+</button>
+                    <button class="btn btn1" onclick="editTask(${taskId})">✎</button>
+                    <button class="btn btn1" onclick="deleteTask(${taskId})"><i class="fa-solid fa-trash"></i></button>
+                </div>
+            `;
+        }
+        input.value = ''; // Clear input
+    }
+
+    // Function to delete task
+    function deleteTask(taskId) {
+        if (taskId === 1) {
+            alert("The first task cannot be deleted.");
+            return; // Prevent deletion of the first task
+        }
+        const row = document.querySelector(`tr[data-task-id="${taskId}"]`);
+        if (row) {
+            row.remove(); // Remove the task row
+        }
+    }
+        // Function to add a new column
+        function addColumn() {
+            const columnName = prompt("Enter the name for the new column:");
+            if (columnName) {
+                columnCount += 1;
+ 
+                // Add the new column header
+                const headerRow = document.querySelector('thead tr');
+                const newHeaderCell = document.createElement('th');
+                newHeaderCell.innerHTML = `
+                    ${columnName}
+                    <button onclick="renameColumn(${columnCount})">Rename</button>
+                    <button onclick="deleteColumn(${columnCount})">Delete</button>
+                `;
+                headerRow.appendChild(newHeaderCell);
+ 
+                // Add the new column to existing tasks
+                const taskRows = document.querySelectorAll('#task-table-body tr');
+                taskRows.forEach(row => {
+                    const newCell = document.createElement('td');
+                    newCell.innerHTML = `<input type="text" placeholder="${columnName}">`;
+                    row.appendChild(newCell);
+                });
+            }
+        }
+ 
+        // Function to rename a column
+        function renameColumn(columnId) {
+            const newColumnName = prompt("Enter new name for the column:");
+            if (newColumnName) {
+                const headerCell = document.querySelector(`thead tr th:nth-child(${columnId})`);
+                headerCell.firstChild.textContent = newColumnName; // Update column name
+            }
+        }
+ 
+        // Function to delete a column
+
+        // Function to delete a column
+        function deleteColumn(columnId) {
+            if (columnId <= 7) {
+                alert("Cannot delete the default columns.");
+                return; // Prevent deletion of default columns
+            }
+ 
+            // Delete the column header
+            const headerRow = document.querySelector('thead tr');
+            const columnToDelete = headerRow.children[columnId - 1]; // Adjust because columnId is 1-based
+            headerRow.removeChild(columnToDelete);
+ 
+            // Delete the column cells from each task row
+            const taskRows = document.querySelectorAll('#task-table-body tr');
+            taskRows.forEach(row => {
+                const cellToDelete = row.children[columnId - 1]; // Adjust because columnId is 1-based
+                row.removeChild(cellToDelete);
+            });
+ 
+            columnCount -= 1; // Decrease column count
+        }
+        
+       
+        // Function to show subtask input
+        function showSubtaskInput(taskId) {
+            const subtaskContainer = document.getElementById(`subtask-container-${taskId}`);
+            const subtaskNameInput = document.createElement('input');
+            subtaskNameInput.type = 'text';
+            subtaskNameInput.placeholder = 'New Subtask';
+            let added = false; // Flag to prevent double addition
+ 
+            const addSubtask = () => {
+                if (!added) {
+                    added = true; // Set flag to true
+                    const subtaskName = subtaskNameInput.value;
+                    if (subtaskName) {
+                        addSubtaskToContainer(taskId, subtaskName);
+                        subtaskContainer.removeChild(subtaskNameInput); // Remove input after adding subtask
+                    }
+                }
+            };
+ 
+            subtaskNameInput.onblur = addSubtask;
+            subtaskNameInput.onkeypress = function(event) {
+                if (event.key === 'Enter') {
+                    addSubtask();
+                }
+            };
+
+            subtaskContainer.appendChild(subtaskNameInput);
+            subtaskNameInput.focus(); // Focus on the input for immediate typing
+            subtaskContainer.style.display = 'block'; // Show subtask container
+        }
+ 
+        // Function to add subtask to the task
+        function addSubtaskToContainer(taskId, subtaskName) {
+            subtaskCount[taskId] = (subtaskCount[taskId] || 0) + 1;
+            const subtaskId = subtaskCount[taskId];
+
+            const subtaskDiv = document.createElement('div');
+            subtaskDiv.className = 'subtask';
+            subtaskDiv.innerHTML = `
+                Subtask ${subtaskId}: ${subtaskName}
+                <button class="btn btn1" onclick="showSubSubtaskInput(${taskId}, ${subtaskId})">+</button>
+                <button class="btn btn1" onclick="editSubtask(${taskId}, ${subtaskId})">✎</button>
+                <button class="btn btn1" onclick="deleteSubtask(${taskId}, ${subtaskId})"><i class="fa-solid fa-trash"></i></button>
+                <div id="sub-subtask-container-${taskId}-${subtaskId}" class="sub-subtask-container"></div>
+                
+                <!-- Additional columns for subtask -->
+                <div class="subtask-details">
+                    <div class="assignee">
+                        <button class="btn" onclick="addAssigneeToSubtask(${taskId}, ${subtaskId})">Add Assignee</button>
+                    </div>
+                    <div class="due-date">
+                        <input type="date" class="due-date-input" placeholder="Due Date" onchange="updateSubtaskDueDate(${taskId}, ${subtaskId}, this.value)" />
+                    </div>
+                    <div class="status">
+                        <select onchange="updateSubtaskStatus(${taskId}, ${subtaskId}, this.value)">
+                            <option value="Not Started">Not Started</option>
+                            <option value="In Progress">In Progress</option>
+                            <option value="Completed">Completed</option>
+                        </select>
+                    </div>
+                    <div class="priority">
+                        <select onchange="updateSubtaskPriority(${taskId}, ${subtaskId}, this.value)">
+                            <option value="Low">Low</option>
+                            <option value="Medium">Medium</option>
+                            <option value="High">High</option>
+                        </select>
+                    </div>
+                    <div class="upload-files">
+                        <input type="file" onchange="uploadFilesForSubtask(${taskId}, ${subtaskId}, this)" />
+                    </div>
+                </div>
+            `;
+            const subtaskContainer = document.getElementById(`subtask-container-${taskId}`);
+            subtaskContainer.appendChild(subtaskDiv);
+        }
+ 
+        // Function to show sub-subtask input
+        function showSubSubtaskInput(taskId, subtaskId) {
+
+            const subSubtaskContainer = document.getElementById(`sub-subtask-container-${taskId}-${subtaskId}`);
+            const subSubtaskNameInput = document.createElement('input');
+            subSubtaskNameInput.type = 'text';
+            subSubtaskNameInput.placeholder = 'New Sub-subtask';
+            let added = false; // Flag to prevent double addition
+ 
+            const addSubSubtask = () => {
+                if (!added) {
+                    added = true; // Set flag to true
+                    const subSubtaskName = subSubtaskNameInput.value;
+                    if (subSubtaskName) {
+                        addSubSubtaskToContainer(taskId, subtaskId, subSubtaskName);
+                        subSubtaskContainer.removeChild(subSubtaskNameInput); // Remove input after adding sub-subtask
+                    }
+                }
+            };
+ 
+            subSubtaskNameInput.onblur = addSubSubtask;
+            subSubtaskNameInput.onkeypress = function(event) {
+                if (event.key === 'Enter') {
+                    addSubSubtask();
+                }
+            };
+ 
+            subSubtaskContainer.appendChild(subSubtaskNameInput);
+            subSubtaskNameInput.focus(); // Focus on the input for immediate typing
+            subSubtaskContainer.style.display = 'block'; // Show sub-subtask container
+        }
+ 
+        // Function to add sub-subtask to the container
+        function addSubSubtaskToContainer(taskId, subtaskId, subSubtaskName) {
+            subSubtaskCount[`${taskId}-${subtaskId}`] = (subSubtaskCount[`${taskId}-${subtaskId}`] || 0) + 1;
+            const subSubtaskId = subSubtaskCount[`${taskId}-${subtaskId}`];
+
+            const subSubtaskDiv = document.createElement('div');
+            subSubtaskDiv.className = 'sub-subtask';
+            subSubtaskDiv.innerHTML = `
+                Sub-subtask ${subSubtaskId}: ${subSubtaskName}
+                <button class="btn btn1" onclick="editSubSubtask(${taskId}, ${subtaskId}, ${subSubtaskId})">✎</button>
+                <button class="btn btn1" onclick="deleteSubSubtask(${taskId}, ${subtaskId}, ${subSubtaskId})"><i class="fa-solid fa-trash"></i></button>
+                
+                <!-- Additional columns for sub-subtask -->
+                <div class="sub-subtask-details">
+                    <div class="assignee">
+                        <button class="btn" onclick="addAssigneeToSubSubtask(${taskId}, ${subtaskId}, ${subSubtaskId})">Add Assignee</button>
+                    </div>
+                    <div class="due-date">
+                        <input type="date" class="due-date-input" placeholder="Due Date" onchange="updateSubSubtaskDueDate(${taskId}, ${subtaskId}, ${subSubtaskId}, this.value)" />
+                    </div>
+                    <div class="status">
+                        <select onchange="updateSubSubtaskStatus(${taskId}, ${subtaskId}, ${subSubtaskId}, this.value)">
+                            <option value="Not Started">Not Started</option>
+                            <option value="In Progress">In Progress</option>
+                            <option value="Completed">Completed</option>
+                        </select>
+                    </div>
+                    <div class="priority">
+                        <select onchange="updateSubSubtaskPriority(${taskId}, ${subtaskId}, ${subSubtaskId}, this.value)">
+                            <option value="Low">Low</option>
+                            <option value="Medium">Medium</option>
+                            <option value="High">High</option>
+                        </select>
+                    </div>
+                    <div class="upload-files">
+                        <input type="file" onchange="uploadFilesForSubSubtask(${taskId}, ${subtaskId}, ${subSubtaskId}, this)" />
+                    </div>
+                </div>
+            `;
+            const subSubtaskContainer = document.getElementById(`sub-subtask-container-${taskId}-${subtaskId}`);
+            subSubtaskContainer.appendChild(subSubtaskDiv);
+        }
+
+        function updateSubtaskDueDate(taskId, subtaskId, dueDate) {
+            console.log(`Subtask ${subtaskId} of Task ${taskId} has Due Date: ${dueDate}`);
+        }
+
+        // Update Status for subtask
+        function updateSubtaskStatus(taskId, subtaskId, status) {
+            console.log(`Subtask ${subtaskId} of Task ${taskId} has Status: ${status}`);
+        }
+
+        // Update Priority for subtask
+        function updateSubtaskPriority(taskId, subtaskId, priority) {
+            console.log(`Subtask ${subtaskId} of Task ${taskId} has Priority: ${priority}`);
+        }
+
+        // Upload Files for subtask
+        function uploadFilesForSubtask(taskId, subtaskId, fileInput) {
+            const file = fileInput.files[0];
+            console.log(`File uploaded for Subtask ${subtaskId} of Task ${taskId}:`, file);
+        }
+
+
+        // Function to edit subtask
+        function editSubtask(taskId, subtaskId) {
+            const subtaskDiv = document.querySelector(`#subtask-container-${taskId} .subtask:nth-child(${subtaskId})`);
+            const subtaskName = subtaskDiv.childNodes[0].textContent.split(': ')[1].trim();
+            const subtaskInput = document.createElement('input');
+            subtaskInput.type = 'text';
+            subtaskInput.value = subtaskName;
+
+            subtaskInput.onblur = function() {
+                saveSubtaskName(subtaskDiv, subtaskInput, taskId, subtaskId);
+            };
+
+            subtaskInput.onkeypress = function(event) {
+                if (event.key === 'Enter') {
+                    saveSubtaskName(subtaskDiv, subtaskInput, taskId, subtaskId);
+                }
+            };
+ 
+            subtaskDiv.replaceChild(subtaskInput, subtaskDiv.childNodes[0]);
+            subtaskInput.focus();
+        }
+
+        // Function to save edited subtask name
+        function saveSubtaskName(subtaskDiv, subtaskInput, taskId, subtaskId) {
+            const newName = subtaskInput.value.trim();
+            if (newName) {
+                subtaskDiv.childNodes[0].textContent = `Subtask ${subtaskId}: ${newName}`;
+            }
+            subtaskDiv.replaceChild(document.createTextNode(`Subtask ${subtaskId}: ${newName}`), subtaskInput);
+        }
+
+        // Function to delete subtask
+        function deleteSubtask(taskId, subtaskId) {
+            const subtaskDiv = document.querySelector(`#subtask-container-${taskId} .subtask:nth-child(${subtaskId})`);
+            if (subtaskDiv) {
+                subtaskDiv.remove();
+            }
+        }
+
+        // Function to edit sub-subtask
+        function editSubSubtask(taskId, subtaskId, subSubtaskId) {
+            const subSubtaskDiv = document.querySelector(`#sub-subtask-container-${taskId}-${subtaskId} .sub-subtask:nth-child(${subSubtaskId})`);
+            const subSubtaskName = subSubtaskDiv.childNodes[0].textContent.split(': ')[1].trim();
+            const subSubtaskInput = document.createElement('input');
+            subSubtaskInput.type = 'text';
+            subSubtaskInput.value = subSubtaskName;
+
+            subSubtaskInput.onblur = function() {
+                saveSubSubtaskName(subSubtaskDiv, subSubtaskInput, taskId, subtaskId, subSubtaskId);
+            };
+
+            subSubtaskInput.onkeypress = function(event) {
+                if (event.key === 'Enter') {
+                    saveSubSubtaskName(subSubtaskDiv, subSubtaskInput, taskId, subtaskId, subSubtaskId);
+                }
+            };
+
+            subSubtaskDiv.replaceChild(subSubtaskInput, subSubtaskDiv.childNodes[0]);
+            subSubtaskInput.focus();
+        }
+
+        // Function to save edited sub-subtask name
+        function saveSubSubtaskName(subSubtaskDiv, subSubtaskInput, taskId, subtaskId, subSubtaskId) {
+            const newName = subSubtaskInput.value.trim();
+            if (newName) {
+                subSubtaskDiv.childNodes[0].textContent = `Sub-subtask ${subSubtaskId}: ${newName}`;
+            }
+            subSubtaskDiv.replaceChild(document.createTextNode(`Sub-subtask ${subSubtaskId}: ${newName}`), subSubtaskInput);
+        }
+
+        // Function to delete sub-subtask
+        function deleteSubSubtask(taskId, subtaskId, subSubtaskId) {
+            const subSubtaskDiv = document.querySelector(`#sub-subtask-container-${taskId}-${subtaskId} .sub-subtask:nth-child(${subSubtaskId})`);
+            if (subSubtaskDiv) {
+                subSubtaskDiv.remove();
+            }
+        }
+
+        function addAssigneeToSubtask(taskId, subtaskId) {
+            const assigneeName = prompt(`Enter Assignee Name for Subtask ${subtaskId}`);
+            if (assigneeName) {
+                const subtaskDiv = document.querySelector(`#subtask-container-${taskId} .subtask:nth-child(${subtaskId})`);
+                const assigneeContainer = document.createElement('div');
+                assigneeContainer.classList.add('assignee');
+                assigneeContainer.innerHTML = `
+                    ${assigneeName} 
+                    <button class="edit-btn" onclick="editAssignee(${taskId}, ${subtaskId}, '${assigneeName}')">Edit</button>
+                    <button class="delete-assignee-btn" onclick="deleteAssignee(${taskId}, ${subtaskId})">-</button>
+                `;
+                subtaskDiv.appendChild(assigneeContainer);
+            }
+        }
+
+        // Function to add assignee to sub-subtask
+        function addAssigneeToSubSubtask(taskId, subtaskId, subSubtaskId) {
+            const assigneeName = prompt(`Enter Assignee Name for Sub-subtask ${subSubtaskId}`);
+            if (assigneeName) {
+                const subSubtaskDiv = document.querySelector(`#sub-subtask-container-${taskId}-${subtaskId} .sub-subtask:nth-child(${subSubtaskId})`);
+                const assigneeContainer = document.createElement('div');
+                assigneeContainer.classList.add('assignee');
+                assigneeContainer.innerHTML = `
+                    ${assigneeName} 
+                    <button class="edit-btn" onclick="editAssignee(${taskId}, ${subtaskId}, ${subSubtaskId}, '${assigneeName}')">Edit</button>
+                    <button class="delete-assignee-btn" onclick="deleteAssignee(${taskId}, ${subtaskId}, ${subSubtaskId})">-</button>
+                `;
+                subSubtaskDiv.appendChild(assigneeContainer);
+            }
+        }
+
+        function deleteAssignee(taskId, subtaskId) {
+            const assigneeContainer = document.querySelector(`#subtask-container-${taskId} .subtask:nth-child(${subtaskId}) .assignee`);
+            if (assigneeContainer) {
+                assigneeContainer.remove();
+            }
+        }
+
+        // Function to delete assignee from sub-subtask
+        function deleteAssignee(taskId, subtaskId, subSubtaskId) {
+            const assigneeContainer = document.querySelector(`#sub-subtask-container-${taskId}-${subtaskId} .sub-subtask:nth-child(${subSubtaskId}) .assignee`);
+            if (assigneeContainer) {
+                assigneeContainer.remove();
+            }
+        }
+  </script>
+
+
+  <script src="common.js"></script>
+
+
+</body>
+</html>
+
+<!-- Required Provision ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Project Management</title>
+  <!-- Google Font for professional look -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+  <script src="https://kit.fontawesome.com/4b2636911a.js" crossorigin="anonymous"></script>
+  <!-- Material Icons for Hamburger Icon and Dropdown -->
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <link rel="stylesheet" href="common.css"> 
+  <link rel="stylesheet" href="Css/AddTask.css">
+</head>
+<body>
+
+    <div class="main">
+        <!-- Navbar -->
+        <div class="navbar">
+            <button class="btn" id="toggleSidebarBtn">
+            <span class="material-icons" style="background: none;" >menu</span> <!-- Hamburger Icon -->
+            </button>
+            <p>Allabout Seat</p>
+        </div>
+
+        <!-- Sidebar -->
+        <div class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+            <p>Project Management</p>
+            <button class="close-btn" id="closeSidebarBtn"><i class="fa-solid fa-chevron-left"></i></button>
+            </div>
+            <ul>
+            <li><a href="ProjectManagement.html">Home</a></li>
+            <li><a href="AddEmployee.html">Add Employee</a></li>
+            <li><a href="AddProject.html">Add Project</a></li>
+            <li><a href="#">Add Task</a></li>
+            </ul>
+
+            <!-- Dropdown for Projects -->
+            <div class="dropdown" id="projectsDropdown">
+            <button id="projectsBtn">
+                Projects
+                <span class="material-icons">expand_more</span>  <!-- Dropdown icon -->
+            </button>
+            <div class="dropdown-content">
+                <a href="#">JLR</a>
+                <a href="#">CAMACO</a>
+                <a href="#">BENCHMARKING WEBSITE</a>
+            </div>
+            </div>
+        </div>
+
+        <!-- Main Container -->
+        <div class="mainContainer">
+            <div class="addTaskdiv">
+                <div class="add-task-btn-container">
+                    <button id="add-task-btn" class="btn" onclick="addTask()">+ Add Task</button>
+                    <button id="add-column-btn" class="btn" onclick="addColumn()">+ Add Column</button>
+                </div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Task ID</th>
+                            <th>Task Name</th>
+                            <th>Assignee</th>
+                            <th>Due Date</th>
+                            <th>Status</th>
+                            <th>Priority</th>
+                            <th class="inpFile">Upload Files</th>
+                        </tr>
+                    </thead>
+                    <tbody id="task-table-body">
+                        <tr>
+                            <td>001</td>
+                            <td>
+                                <div class="flexitems3">
+                                    <input type="text" class="task-input" placeholder="Task 1" onblur="updateTaskName(this, 1)"/>
+                                    <button class="btn btn1" onclick="showSubtaskInput(1)">+</button>
+                                    <button class="btn btn1" onclick="editTask(1)">✎</button>
+                                    <button class="btn btn1" onclick="deleteTask(1)">-</button>
+                                </div>
+                                <div id="subtask-container-1" class="subtask-container"></div>
+                            </td>
+                            <td><div class="assigneeNames dflex"> <i class="fa-solid fa-user-plus"></i> <button class="addAssigneeBtn" onclick="addAssignee(1)">Add Assignee</button></div></td>
+                            <td><div class="newdate"><input type="date" name="" id=""></div></td>
+                            <td><div class="statusSelect"><select name="" id="">
+                                <option value="">select</option>
+                            </select></div></td>
+                            <td><div class="task-priority">
+                                <select>
+                                    <option value="Low">Low</option>
+                                    <option value="Medium">Medium</option>
+                                    <option value="High">High</option>
+                                </select>
+                            </div></td>
+                            <td><div class="fileUpload">
+                                <input type="file">
+                            </div></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+
+
+  <script>
+        let taskCount = 1;
+        let subtaskCount = {};
+        let subSubtaskCount = {};
+        let columnCount = 7; // Initial column count excluding new columns
+ 
+        // Function to add assignee dynamically
+        function addAssignee(taskId) {
+            const assigneeNameCell = document.querySelector(`#task-table-body tr[data-task-id="${taskId}"] td:nth-child(3)`);
+            const assignee = prompt('Enter Assignee Name');
+            if (assignee) {
+                assigneeNameCell.innerHTML = `<div class="dflex" id="assignee-${taskId}"> 
+                    <p>${assignee}</p>
+                    <button class="edit-btn" onclick="editText(${taskId})">Edit</button>
+                    <button class="delete-assignee-btn" onclick="deleteAssignee(${taskId})">-</button>
+                </div>`;
+            }
+        }
+
+ 
+        function deleteAssignee(taskId){
+            const assigneeName = document.querySelector(`#task-table-body tr:nth-child(${taskId}) .assigneeNames`);
+            assigneeName.innerHTML = '<div class="assigneeNames dflex"> <i class="fa-solid fa-user-plus"></i> <button class="addAssigneeBtn" onclick="addAssignee('+taskId+')">Add Assignee</button> </div>';
+        }
+ 
+        // Function to edit assignee name
+        function editText(taskId) {
+            const assigneeName = document.querySelector(`#task-table-body tr:nth-child(${taskId}) .assigneeNames p`);
+            const currentAssignee = assigneeName.textContent;
+            const newAssignee = prompt("Change assignee", currentAssignee);
+            if (newAssignee) {
+                assigneeName.textContent = newAssignee;
+            }
+        }
+ 
+        // Function to add new task row
+        function addTask() {
+        taskCount += 1;
+
+        const newTaskRow = document.createElement('tr');
+        newTaskRow.setAttribute('data-task-id', taskCount); // Set data-task-id to uniquely identify the row
+        newTaskRow.innerHTML = `
+            <td>${taskCount.toString().padStart(3, '0')}</td>
+            <td>
+                <div class="flexitems3">
+                    <input type="text" class="task-input" placeholder="New Task" onblur="updateTaskName(this, ${taskCount})"/>
+                    <button class="btn btn1" onclick="showSubtaskInput(${taskCount})">+</button>
+                    <button class="btn btn1" onclick="editTask(${taskCount})">✎</button>
+                    <button class="btn btn1" onclick="deleteTask(${taskCount})"><i class="fa-solid fa-trash"></i></button>
+                </div>
+                <div id="subtask-container-${taskCount}" class="subtask-container"></div>
+            </td>
+            <td><div class="assigneeNames"> <i class="fa-solid fa-user-plus"></i> <button class="addAssigneeBtn" onclick="addAssignee(${taskCount})">Add Assignee</button> </div></td>
+            <td>2024-08-30</td>
+            <td>In Progress</td>
+            <td>High</td>
+            <td><input type="file"></td>
+        `;
+        
+        // Add additional columns
+        for (let i = 8; i <= columnCount; i++) {
+            const cell = document.createElement('td');
+            cell.innerHTML = `<input type="text" placeholder="New Field">`;
+            newTaskRow.appendChild(cell);
+        }
+
+        document.getElementById('task-table-body').appendChild(newTaskRow);
+    }
+
+    // Function to update task name when user types
+    function updateTaskName(input, taskId) {
+        const taskName = input.value.trim();
+        if (taskName) {
+            input.placeholder = taskName; // Update placeholder to show the task name
+        } else {
+            input.placeholder = "Task name required"; // Notify user
+        }
+    }
+
+    // Function to edit task
+    function editTask(taskId) {
+        const input = document.querySelector(`tr[data-task-id="${taskId}"] .task-input`);
+        input.focus(); // Focus on the input for immediate editing
+
+        input.onkeypress = function(event) {
+            if (event.key === 'Enter') {
+                saveTaskName(input, taskId);
+            }
+        };
+    }
+
+    // Function to save task name after editing
+    function saveTaskName(input, taskId) {
+        const taskName = input.value.trim();
+        const taskRow = document.querySelector(`tr[data-task-id="${taskId}"]`);
+        const taskNameCell = taskRow.querySelector('td:nth-child(2)');
+
+        if (taskName) {
+            taskNameCell.innerHTML = `
+                <div class="flexitems3">
+                    ${taskName}
+                    <button class="btn btn1" onclick="showSubtaskInput(${taskId})">+</button>
+                    <button class="btn btn1" onclick="editTask(${taskId})">✎</button>
+                    <button class="btn btn1" onclick="deleteTask(${taskId})"><i class="fa-solid fa-trash"></i></button>
+                </div>
+            `;
+        }
+        input.value = ''; // Clear input
+    }
+
+    // Function to delete task
+    function deleteTask(taskId) {
+        if (taskId === 1) {
+            alert("The first task cannot be deleted.");
+            return; // Prevent deletion of the first task
+        }
+        const row = document.querySelector(`tr[data-task-id="${taskId}"]`);
+        if (row) {
+            row.remove(); // Remove the task row
+        }
+    }
+        // Function to add a new column
+        function addColumn() {
+            const columnName = prompt("Enter the name for the new column:");
+            if (columnName) {
+                columnCount += 1;
+ 
+                // Add the new column header
+                const headerRow = document.querySelector('thead tr');
+                const newHeaderCell = document.createElement('th');
+                newHeaderCell.innerHTML = `
+                    ${columnName}
+                    <button onclick="renameColumn(${columnCount})">Rename</button>
+                    <button onclick="deleteColumn(${columnCount})">Delete</button>
+                `;
+                headerRow.appendChild(newHeaderCell);
+ 
+                // Add the new column to existing tasks
+                const taskRows = document.querySelectorAll('#task-table-body tr');
+                taskRows.forEach(row => {
+                    const newCell = document.createElement('td');
+                    newCell.innerHTML = `<input type="text" placeholder="${columnName}">`;
+                    row.appendChild(newCell);
+                });
+            }
+        }
+ 
+        // Function to rename a column
+        function renameColumn(columnId) {
+            const newColumnName = prompt("Enter new name for the column:");
+            if (newColumnName) {
+                const headerCell = document.querySelector(`thead tr th:nth-child(${columnId})`);
+                headerCell.firstChild.textContent = newColumnName; // Update column name
+            }
+        }
+ 
+        // Function to delete a column
+
+        // Function to delete a column
+        function deleteColumn(columnId) {
+            if (columnId <= 7) {
+                alert("Cannot delete the default columns.");
+                return; // Prevent deletion of default columns
+            }
+ 
+            // Delete the column header
+            const headerRow = document.querySelector('thead tr');
+            const columnToDelete = headerRow.children[columnId - 1]; // Adjust because columnId is 1-based
+            headerRow.removeChild(columnToDelete);
+ 
+            // Delete the column cells from each task row
+            const taskRows = document.querySelectorAll('#task-table-body tr');
+            taskRows.forEach(row => {
+                const cellToDelete = row.children[columnId - 1]; // Adjust because columnId is 1-based
+                row.removeChild(cellToDelete);
+            });
+ 
+            columnCount -= 1; // Decrease column count
+        }
+        
+       
+        // Function to show subtask input
+        function showSubtaskInput(taskId) {
+            const subtaskContainer = document.getElementById(`subtask-container-${taskId}`);
+            const subtaskNameInput = document.createElement('input');
+            subtaskNameInput.type = 'text';
+            subtaskNameInput.placeholder = 'New Subtask';
+            let added = false; // Flag to prevent double addition
+ 
+            const addSubtask = () => {
+                if (!added) {
+                    added = true; // Set flag to true
+                    const subtaskName = subtaskNameInput.value;
+                    if (subtaskName) {
+                        addSubtaskToContainer(taskId, subtaskName);
+                        subtaskContainer.removeChild(subtaskNameInput); // Remove input after adding subtask
+                    }
+                }
+            };
+ 
+            subtaskNameInput.onblur = addSubtask;
+            subtaskNameInput.onkeypress = function(event) {
+                if (event.key === 'Enter') {
+                    addSubtask();
+                }
+            };
+
+            subtaskContainer.appendChild(subtaskNameInput);
+            subtaskNameInput.focus(); // Focus on the input for immediate typing
+            subtaskContainer.style.display = 'block'; // Show subtask container
+        }
+ 
+        // Function to add subtask to the task
+        function addSubtaskToContainer(taskId, subtaskName) {
+            subtaskCount[taskId] = (subtaskCount[taskId] || 0) + 1;
+            const subtaskId = subtaskCount[taskId];
+
+            const assigneeDynamic = document.querySelector('.assigneeNames');
+            const newdate = document.querySelector('.newdate');
+            const statusSelect = document.querySelector('.statusSelect');
+            const taskPriority = document.querySelector('.task-priority')
+            const subtaskDiv = document.createElement('div');
+            const fileUpload = document.querySelector('.fileUpload');
+
+
+            subtaskDiv.className = 'subtask';
+            subtaskDiv.innerHTML = `
+                Subtask ${subtaskId}: ${subtaskName}
+                <button class="btn btn1" onclick="showSubSubtaskInput(${taskId}, ${subtaskId})">+</button>
+                <button class="btn btn1" onclick="editSubtask(${taskId}, ${subtaskId})">✎</button>
+                <button class="btn btn1" onclick="deleteSubtask(${taskId}, ${subtaskId})"><i class="fa-solid fa-trash"></i></button>
+                <div id="sub-subtask-container-${taskId}-${subtaskId}" class="sub-subtask-container"></div>
+                </div>
+            `;
+            
+            assigneeDynamic.innerHTML+=`<button class="btn" onclick="addAssigneeToSubtask(${taskId}, ${subtaskId})">Add Assignee</button>`
+            newdate.innerHTML+=`<input type="date" class="due-date-input" placeholder="Due Date" onchange="updateSubtaskDueDate(${taskId}, ${subtaskId}, this.value)" />`
+            statusSelect.innerHTML+=`<select onchange="updateSubtaskStatus(${taskId}, ${subtaskId}, this.value)">
+                            <option value="Not Started">Not Started</option>
+                            <option value="In Progress">In Progress</option>
+                            <option value="Completed">Completed</option>
+                        </select>`
+            
+            
+            taskPriority.innerHTML+=` <select onchange="updateSubtaskPriority(${taskId}, ${subtaskId}, this.value)">
+                            <option value="Low">Low</option>
+                            <option value="Medium">Medium</option>
+                            <option value="High">High</option>
+                        </select>`
+
+            fileUpload.innerHTML+=`<input type="file" onchange="uploadFilesForSubtask(${taskId}, ${subtaskId}, this)" />`
+            const subtaskContainer = document.getElementById(`subtask-container-${taskId}`);
+            subtaskContainer.appendChild(subtaskDiv);
+        }
+        
+ 
+        // Function to show sub-subtask input
+        function showSubSubtaskInput(taskId, subtaskId) {
+
+            const subSubtaskContainer = document.getElementById(`sub-subtask-container-${taskId}-${subtaskId}`);
+            const subSubtaskNameInput = document.createElement('input');
+            subSubtaskNameInput.type = 'text';
+            subSubtaskNameInput.placeholder = 'New Sub-subtask';
+            let added = false; // Flag to prevent double addition
+ 
+            const addSubSubtask = () => {
+                if (!added) {
+                    added = true; // Set flag to true
+                    const subSubtaskName = subSubtaskNameInput.value;
+                    if (subSubtaskName) {
+                        addSubSubtaskToContainer(taskId, subtaskId, subSubtaskName);
+                        subSubtaskContainer.removeChild(subSubtaskNameInput); // Remove input after adding sub-subtask
+                    }
+                }
+            };
+ 
+            subSubtaskNameInput.onblur = addSubSubtask;
+            subSubtaskNameInput.onkeypress = function(event) {
+                if (event.key === 'Enter') {
+                    addSubSubtask();
+                }
+            };
+            
+            subSubtaskContainer.appendChild(subSubtaskNameInput);
+            subSubtaskNameInput.focus(); // Focus on the input for immediate typing
+            subSubtaskContainer.style.display = 'block'; // Show sub-subtask container
+        }
+ 
+        // Function to add sub-subtask to the container
+        function addSubSubtaskToContainer(taskId, subtaskId, subSubtaskName) {
+            subSubtaskCount[`${taskId}-${subtaskId}`] = (subSubtaskCount[`${taskId}-${subtaskId}`] || 0) + 1;
+            const subSubtaskId = subSubtaskCount[`${taskId}-${subtaskId}`];
+            
+            const subSubtaskDiv = document.createElement('div');
+            subSubtaskDiv.className = 'sub-subtask';
+            subSubtaskDiv.innerHTML = `
+                Sub-subtask ${subSubtaskId}: ${subSubtaskName}
+                <button class="btn btn1" onclick="editSubSubtask(${taskId}, ${subtaskId}, ${subSubtaskId})">✎</button>
+                <button class="btn btn1" onclick="deleteSubSubtask(${taskId}, ${subtaskId}, ${subSubtaskId})"><i class="fa-solid fa-trash"></i></button>
+                
+                <!-- Additional columns for sub-subtask -->
+                <div class="sub-subtask-details">
+                    <div class="assignee">
+                        <button class="btn" onclick="addAssigneeToSubSubtask(${taskId}, ${subtaskId}, ${subSubtaskId})">Add Assignee</button>
+                    </div>
+                    <div class="due-date">
+                        <input type="date" class="due-date-input" placeholder="Due Date" onchange="updateSubSubtaskDueDate(${taskId}, ${subtaskId}, ${subSubtaskId}, this.value)" />
+                    </div>
+                    <div class="status">
+                        <select onchange="updateSubSubtaskStatus(${taskId}, ${subtaskId}, ${subSubtaskId}, this.value)">
+                            <option value="Not Started">Not Started</option>
+                            <option value="In Progress">In Progress</option>
+                            <option value="Completed">Completed</option>
+                        </select>
+                    </div>
+                    <div class="priority">
+                        
+                    </div>
+                    <div class="upload-files">
+                        <input type="file" onchange="uploadFilesForSubSubtask(${taskId}, ${subtaskId}, ${subSubtaskId}, this)" />
+                    </div>
+                </div>
+            `;
+
+            
+
+            const subSubtaskContainer = document.getElementById(`sub-subtask-container-${taskId}-${subtaskId}`);
+            subSubtaskContainer.appendChild(subSubtaskDiv);
+        }
+
+        function updateSubtaskDueDate(taskId, subtaskId, dueDate) {
+            console.log(`Subtask ${subtaskId} of Task ${taskId} has Due Date: ${dueDate}`);
+        }
+
+        // Update Status for subtask
+        function updateSubtaskStatus(taskId, subtaskId, status) {
+            console.log(`Subtask ${subtaskId} of Task ${taskId} has Status: ${status}`);
+        }
+
+        // Update Priority for subtask
+        function updateSubtaskPriority(taskId, subtaskId, priority) {
+            console.log(`Subtask ${subtaskId} of Task ${taskId} has Priority: ${priority}`);
+        }
+
+        // Upload Files for subtask
+        function uploadFilesForSubtask(taskId, subtaskId, fileInput) {
+            const file = fileInput.files[0];
+            console.log(`File uploaded for Subtask ${subtaskId} of Task ${taskId}:`, file);
+        }
+
+
+        // Function to edit subtask
+        function editSubtask(taskId, subtaskId) {
+            const subtaskDiv = document.querySelector(`#subtask-container-${taskId} .subtask:nth-child(${subtaskId})`);
+            const subtaskName = subtaskDiv.childNodes[0].textContent.split(': ')[1].trim();
+            const subtaskInput = document.createElement('input');
+            subtaskInput.type = 'text';
+            subtaskInput.value = subtaskName;
+
+            subtaskInput.onblur = function() {
+                saveSubtaskName(subtaskDiv, subtaskInput, taskId, subtaskId);
+            };
+
+            subtaskInput.onkeypress = function(event) {
+                if (event.key === 'Enter') {
+                    saveSubtaskName(subtaskDiv, subtaskInput, taskId, subtaskId);
+                }
+            };
+ 
+            subtaskDiv.replaceChild(subtaskInput, subtaskDiv.childNodes[0]);
+            subtaskInput.focus();
+        }
+
+        // Function to save edited subtask name
+        function saveSubtaskName(subtaskDiv, subtaskInput, taskId, subtaskId) {
+            const newName = subtaskInput.value.trim();
+            if (newName) {
+                subtaskDiv.childNodes[0].textContent = `Subtask ${subtaskId}: ${newName}`;
+            }
+            subtaskDiv.replaceChild(document.createTextNode(`Subtask ${subtaskId}: ${newName}`), subtaskInput);
+        }
+
+        // Function to delete subtask
+        function deleteSubtask(taskId, subtaskId) {
+            const subtaskDiv = document.querySelector(`#subtask-container-${taskId} .subtask:nth-child(${subtaskId})`);
+            if (subtaskDiv) {
+                subtaskDiv.remove();
+            }
+        }
+
+        // Function to edit sub-subtask
+        function editSubSubtask(taskId, subtaskId, subSubtaskId) {
+            const subSubtaskDiv = document.querySelector(`#sub-subtask-container-${taskId}-${subtaskId} .sub-subtask:nth-child(${subSubtaskId})`);
+            const subSubtaskName = subSubtaskDiv.childNodes[0].textContent.split(': ')[1].trim();
+            const subSubtaskInput = document.createElement('input');
+            subSubtaskInput.type = 'text';
+            subSubtaskInput.value = subSubtaskName;
+
+            subSubtaskInput.onblur = function() {
+                saveSubSubtaskName(subSubtaskDiv, subSubtaskInput, taskId, subtaskId, subSubtaskId);
+            };
+
+            subSubtaskInput.onkeypress = function(event) {
+                if (event.key === 'Enter') {
+                    saveSubSubtaskName(subSubtaskDiv, subSubtaskInput, taskId, subtaskId, subSubtaskId);
+                }
+            };
+
+            subSubtaskDiv.replaceChild(subSubtaskInput, subSubtaskDiv.childNodes[0]);
+            subSubtaskInput.focus();
+        }
+
+        // Function to save edited sub-subtask name
+        function saveSubSubtaskName(subSubtaskDiv, subSubtaskInput, taskId, subtaskId, subSubtaskId) {
+            const newName = subSubtaskInput.value.trim();
+            if (newName) {
+                subSubtaskDiv.childNodes[0].textContent = `Sub-subtask ${subSubtaskId}: ${newName}`;
+            }
+            subSubtaskDiv.replaceChild(document.createTextNode(`Sub-subtask ${subSubtaskId}: ${newName}`), subSubtaskInput);
+        }
+
+        // Function to delete sub-subtask
+        function deleteSubSubtask(taskId, subtaskId, subSubtaskId) {
+            const subSubtaskDiv = document.querySelector(`#sub-subtask-container-${taskId}-${subtaskId} .sub-subtask:nth-child(${subSubtaskId})`);
+            if (subSubtaskDiv) {
+                subSubtaskDiv.remove();
+            }
+        }
+
+        function addAssigneeToSubtask(taskId, subtaskId) {
+            const assigneeName = prompt(`Enter Assignee Name for Subtask ${subtaskId}`);
+            if (assigneeName) {
+                const subtaskDiv = document.querySelector(`#subtask-container-${taskId} .subtask:nth-child(${subtaskId})`);
+                const assigneeContainer = document.createElement('div');
+                assigneeContainer.classList.add('assignee');
+                assigneeContainer.innerHTML = `
+                    ${assigneeName} 
+                    <button class="edit-btn" onclick="editAssignee(${taskId}, ${subtaskId}, '${assigneeName}')">Edit</button>
+                    <button class="delete-assignee-btn" onclick="deleteAssignee(${taskId}, ${subtaskId})">-</button>
+                `;
+                subtaskDiv.appendChild(assigneeContainer);
+            }
+        }
+
+        // Function to add assignee to sub-subtask
+        function addAssigneeToSubSubtask(taskId, subtaskId, subSubtaskId) {
+            const assigneeName = prompt(`Enter Assignee Name for Sub-subtask ${subSubtaskId}`);
+            if (assigneeName) {
+                const subSubtaskDiv = document.querySelector(`#sub-subtask-container-${taskId}-${subtaskId} .sub-subtask:nth-child(${subSubtaskId})`);
+                const assigneeContainer = document.createElement('div');
+                assigneeContainer.classList.add('assignee');
+                assigneeContainer.innerHTML = `
+                    ${assigneeName} 
+                    <button class="edit-btn" onclick="editAssignee(${taskId}, ${subtaskId}, ${subSubtaskId}, '${assigneeName}')">Edit</button>
+                    <button class="delete-assignee-btn" onclick="deleteAssignee(${taskId}, ${subtaskId}, ${subSubtaskId})">-</button>
+                `;
+                subSubtaskDiv.appendChild(assigneeContainer);
+            }
+        }
+
+        function deleteAssignee(taskId, subtaskId) {
+            const assigneeContainer = document.querySelector(`#subtask-container-${taskId} .subtask:nth-child(${subtaskId}) .assignee`);
+            if (assigneeContainer) {
+                assigneeContainer.remove();
+            }
+        }
+
+        // Function to delete assignee from sub-subtask
+        function deleteAssignee(taskId, subtaskId, subSubtaskId) {
+            const assigneeContainer = document.querySelector(`#sub-subtask-container-${taskId}-${subtaskId} .sub-subtask:nth-child(${subSubtaskId}) .assignee`);
+            if (assigneeContainer) {
+                assigneeContainer.remove();
+            }
+        }
+  </script>
+
+
+  <script src="common.js"></script>
+
+
+</body>
+</html>
+
+<!-- -----------------------------Expected But not proper----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Project Management</title>
+  <!-- Google Font for professional look -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+  <script src="https://kit.fontawesome.com/4b2636911a.js" crossorigin="anonymous"></script>
+  <!-- Material Icons for Hamburger Icon and Dropdown -->
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <link rel="stylesheet" href="common.css"> 
+  <link rel="stylesheet" href="Css/AddTask.css">
+</head>
+<body>
+    <div class="main">
+        <!-- Navbar -->
+        <div class="navbar">
+            <button class="btn" id="toggleSidebarBtn">
+            <span class="material-icons" style="background: none;" >menu</span> <!-- Hamburger Icon -->
+            </button>
+            <p>Allabout Seat</p>
+        </div>
+
+        <!-- Sidebar -->
+        <div class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+            <p>Project Management</p>
+            <button class="close-btn" id="closeSidebarBtn"><i class="fa-solid fa-chevron-left"></i></button>
+            </div>
+            <ul>
+            <li><a href="ProjectManagement.html">Home</a></li>
+            <li><a href="AddEmployee.html">Add Employee</a></li>
+            <li><a href="AddProject.html">Add Project</a></li>
+            <li><a href="#">Add Task</a></li>
+            </ul>
+
+            <!-- Dropdown for Projects -->
+            <div class="dropdown" id="projectsDropdown">
+            <button id="projectsBtn">
+                Projects
+                <span class="material-icons">expand_more</span>  <!-- Dropdown icon -->
+            </button>
+            <div class="dropdown-content">
+                <a href="#">JLR</a>
+                <a href="#">CAMACO</a>
+                <a href="#">BENCHMARKING WEBSITE</a>
+            </div>
+            </div>
+        </div>
+
+        <!-- Main Container -->
+        <div class="mainContainer">
+                <div class="addTaskdiv">
+                    <div class="add-task-btn-container">
+                        <button id="add-task-btn" class="btn" onclick="addTask()">+ Add Task</button>
+                        <button id="add-column-btn" class="btn" onclick="addColumn()">+ Add Column</button>
+                    </div>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Task ID</th>
+                                <th>Task Name</th>
+                                <th>Assignee</th>
+                                <th>Due Date</th>
+                                <th>Status</th>
+                                <th>Priority</th>
+                                <th class="inpFile">Upload Files</th>
+                            </tr>
+                        </thead>
+                        <tbody id="task-table-body">
+                            <tr data-task-id="1">
+                                <td>001</td>
+                                <td>
+                                    <div class="flexitems3">
+                                        <input type="text" class="task-input" placeholder="Task 1" onblur="updateTaskName(this, 1)" />
+                                        <button class="btn btn1" onclick="showSubtaskInput(1)">+</button>
+                                        <button class="btn btn1" onclick="editTask(1)">✎</button>
+                                        <button class="btn btn1" onclick="deleteTask(1)">-</button>
+                                    </div>
+                                    <div id="subtask-container-1" class="subtask-container"></div>
+                                </td>
+                                <td>
+                                    <div class="assigneeNames dflex assignee-column" style="flex-direction: column;">
+                                        <i class="fa-solid fa-user-plus"></i>
+                                        <button class="addAssigneeBtn" onclick="addAssignee(1)">Add Assignee</button>
+                                    </div>
+                                </td>
+                                <td><div class="newdate"><input type="date" name="" id=""></div></td>
+                                <td>
+                                    <div class="statusSelect dflex" style="flex-direction: column;">
+                                        <select name="" id="">
+                                            <option value="">select</option>
+                                        </select>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="task-priority dflex" style="flex-direction: column;">
+                                        <select>
+                                            <option value="Low">Low</option>
+                                            <option value="Medium">Medium</option>
+                                            <option value="High">High</option>
+                                        </select>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="fileUpload">
+                                        <input type="file">
+                                    </div>
+                                </td>
+                            </tr>
+                            <!-- Additional task rows can go here -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+     </div>
+
+  <script>
+        let taskCount = 1;
+        let subtaskCount = {};
+        let subSubtaskCount = {};
+        let columnCount = 7; // Initial column count excluding new columns
+ 
+        function addAssignee(taskId) {
+        const assigneeName = prompt('Enter Assignee Name');
+            if (assigneeName) {
+                const assigneeCell = document.querySelector(`#task-table-body tr[data-task-id="${taskId}"] td:nth-child(3)`); // Assignee column
+                const assigneeContainer = document.createElement('div');
+                assigneeContainer.classList.add('assignee');
+                assigneeContainer.innerHTML = `
+                    ${assigneeName} 
+                    <button class="edit-btn" onclick="editAssignee(${taskId}, '${assigneeName}')">Edit</button>
+                    <button class="delete-assignee-btn" onclick="deleteAssignee(${taskId})">-</button>
+                `;
+
+                // Append assignee container to the assignee column
+                assigneeCell.querySelector('.assigneeNames').innerHTML = '';  // Clear the "Add Assignee" button
+                assigneeCell.appendChild(assigneeContainer);
+            }
+        }
+
+        function editAssignee(taskId, currentAssignee) {
+            const newAssignee = prompt("Change assignee", currentAssignee);
+            if (newAssignee) {
+                const assigneeElement = document.querySelector(`#task-table-body tr[data-task-id="${taskId}"] .assignee p`);
+                assigneeElement.textContent = newAssignee;
+            }
+        }
+
+        // Function to add new task row
+        function addTask() {
+            taskCount += 1;
+            const newTaskRow = document.createElement('tr');
+            newTaskRow.setAttribute('data-task-id', taskCount); // Set data-task-id to uniquely identify the row
+            newTaskRow.innerHTML = `
+                <td>${taskCount.toString().padStart(3, '0')}</td>
+                <td>
+                    <div class="flexitems3">
+                        <input type="text" class="task-input" placeholder="New Task" onblur="updateTaskName(this, ${taskCount})"/>
+                        <button class="btn btn1" onclick="showSubtaskInput(${taskCount})">+</button>
+                        <button class="btn btn1" onclick="editTask(${taskCount})">✎</button>
+                        <button class="btn btn1" onclick="deleteTask(${taskCount})"><i class="fa-solid fa-trash"></i></button>
+                    </div>
+                    <div id="subtask-container-${taskCount}" class="subtask-container"></div>
+                </td>
+                <td>
+                    <div class="assigneeNames">
+                        <i class="fa-solid fa-user-plus"></i> 
+                        <button class="addAssigneeBtn" onclick="addAssignee(${taskCount})">Add Assignee</button>
+                    </div>
+                </td>
+                 <td><div class="newdate"><input type="date" name="" id=""></div></td>
+                                <td>
+                                    <div class="statusSelect dflex" style="flex-direction: column;">
+                                        <select name="" id="">
+                                            <option value="">select</option>
+                                        </select>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="task-priority dflex" style="flex-direction: column;">
+                                        <select>
+                                            <option value="Low">Low</option>
+                                            <option value="Medium">Medium</option>
+                                            <option value="High">High</option>
+                                        </select>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="fileUpload">
+                                        <input type="file">
+                                    </div>
+                                </td>
+            `;
+
+            // Add additional columns
+            for (let i = 8; i <= columnCount; i++) {
+                const cell = document.createElement('td');
+                cell.innerHTML = `<input type="text" placeholder="New Field">`;
+                newTaskRow.appendChild(cell);
+            }
+
+            // Append the new task row to the task table body
+            document.getElementById('task-table-body').appendChild(newTaskRow);
+        }
+
+    // Function to update task name when user types
+    function updateTaskName(input, taskId) {
+        const taskName = input.value.trim();
+        if (taskName) {
+            input.placeholder = taskName; // Update placeholder to show the task name
+        } else {
+            input.placeholder = "Task name required"; // Notify user
+        }
+    }
+
+    // Function to edit task
+    function editTask(taskId) {
+        const input = document.querySelector(`tr[data-task-id="${taskId}"] .task-input`);
+        input.focus(); // Focus on the input for immediate editing
+
+        input.onkeypress = function(event) {
+            if (event.key === 'Enter') {
+                saveTaskName(input, taskId);
+            }
+        };
+    }
+
+    // Function to save task name after editing
+    function saveTaskName(input, taskId) {
+        const taskName = input.value.trim();
+        const taskRow = document.querySelector(`tr[data-task-id="${taskId}"]`);
+        const taskNameCell = taskRow.querySelector('td:nth-child(2)');
+
+        if (taskName) {
+            taskNameCell.innerHTML = `
+                <div class="flexitems3">
+                    ${taskName}
+                    <button class="btn btn1" onclick="showSubtaskInput(${taskId})">+</button>
+                    <button class="btn btn1" onclick="editTask(${taskId})">✎</button>
+                    <button class="btn btn1" onclick="deleteTask(${taskId})"><i class="fa-solid fa-trash"></i></button>
+                </div>
+            `;
+        }
+        input.value = ''; // Clear input
+    }
+
+    // Function to delete task
+    function deleteTask(taskId) {
+        if (taskId === 1) {
+            alert("The first task cannot be deleted.");
+            return; // Prevent deletion of the first task
+        }
+        const row = document.querySelector(`tr[data-task-id="${taskId}"]`);
+        if (row) {
+            row.remove(); // Remove the task row
+        }
+    }
+        // Function to add a new column
+        function addColumn() {
+            const columnName = prompt("Enter the name for the new column:");
+            if (columnName) {
+                columnCount += 1;
+                // Add the new column header
+                const headerRow = document.querySelector('thead tr');
+                const newHeaderCell = document.createElement('th');
+                newHeaderCell.innerHTML = `
+                    ${columnName}
+                    <button onclick="renameColumn(${columnCount})">Rename</button>
+                    <button onclick="deleteColumn(${columnCount})">Delete</button>
+                `;
+                headerRow.appendChild(newHeaderCell);
+ 
+                // Add the new column to existing tasks
+                const taskRows = document.querySelectorAll('#task-table-body tr');
+                taskRows.forEach(row => {
+                    const newCell = document.createElement('td');
+                    newCell.innerHTML = `<input type="text" placeholder="${columnName}">`;
+                    row.appendChild(newCell);
+                });
+            }
+        }
+ 
+        // Function to rename a column
+        function renameColumn(columnId) {
+            const newColumnName = prompt("Enter new name for the column:");
+            if (newColumnName) {
+                const headerCell = document.querySelector(`thead tr th:nth-child(${columnId})`);
+                headerCell.firstChild.textContent = newColumnName; // Update column name
+            }
+        }
+ 
+        // Function to delete a column
+
+        // Function to delete a column
+        function deleteColumn(columnId) {
+
+            if (columnId <= 7) {
+                alert("Cannot delete the default columns.");
+                return; // Prevent deletion of default columns
+            }
+ 
+            // Delete the column header
+            const headerRow = document.querySelector('thead tr');
+            const columnToDelete = headerRow.children[columnId - 1]; // Adjust because columnId is 1-based
+            headerRow.removeChild(columnToDelete);
+ 
+            // Delete the column cells from each task row
+            const taskRows = document.querySelectorAll('#task-table-body tr');
+            taskRows.forEach(row => {
+                const cellToDelete = row.children[columnId - 1]; // Adjust because columnId is 1-based
+                row.removeChild(cellToDelete);
+            });
+ 
+            columnCount -= 1; // Decrease column count
+        }
+
+
+
+        // Function to show subtask input
+        function showSubtaskInput(taskId) {
+            const subtaskContainer = document.getElementById(`subtask-container-${taskId}`);
+            const subtaskNameInput = document.createElement('input');
+            subtaskNameInput.type = 'text';
+            subtaskNameInput.placeholder = 'New Subtask';
+            let added = false; // Flag to prevent double addition
+
+            const addSubtask = () => {
+                if (!added) {
+                    added = true; // Set flag to true
+                    const subtaskName = subtaskNameInput.value;
+                    if (subtaskName) {
+                        addSubtaskToContainer(taskId, subtaskName);
+                        subtaskContainer.removeChild(subtaskNameInput); // Remove input after adding subtask
+                    }
+                }
+            };
+ 
+            subtaskNameInput.onblur = addSubtask;
+            subtaskNameInput.onkeypress = function(event) {
+                if (event.key === 'Enter') {
+                    addSubtask();
+                }
+            };
+
+            subtaskContainer.appendChild(subtaskNameInput);
+            subtaskNameInput.focus(); // Focus on the input for immediate typing
+            subtaskContainer.style.display = 'block'; // Show subtask container
+        }
+
+        // Function to add subtask to the task
+        function addSubtaskToContainer(taskId, subtaskName) {
+            subtaskCount[taskId] = (subtaskCount[taskId] || 0) + 1;
+            const subtaskId = subtaskCount[taskId];
+
+            const taskRow = document.querySelector(`#task-table-body tr[data-task-id="${taskId}"]`);
+            const assigneeContainer = taskRow.querySelector('.assigneeNames');
+            const newdate = taskRow.querySelector('.newdate');
+            const statusSelect = taskRow.querySelector('.statusSelect');
+            const taskPriority = taskRow.querySelector('.task-priority');
+            const fileUpload = taskRow.querySelector('.fileUpload');
+
+            const subtaskDiv = document.createElement('div');
+            subtaskDiv.className = 'subtask';
+            subtaskDiv.innerHTML = `
+                Subtask ${subtaskId}: ${subtaskName}
+                <button class="btn btn1" onclick="showSubSubtaskInput(${taskId}, ${subtaskId})">+</button>
+                <button class="btn btn1" onclick="editSubtask(${taskId}, ${subtaskId})">✎</button>
+                <button class="btn btn1" onclick="deleteSubtask(${taskId}, ${subtaskId})"><i class="fa-solid fa-trash"></i></button>
+                <div id="sub-subtask-container-${taskId}-${subtaskId}" class="sub-subtask-container"></div>
+            `;
+
+        
+
+            assigneeContainer.innerHTML += `<button class="btn" onclick="addAssigneeToSubtask(${taskId}, ${subtaskId})">Add Assignee</button>`;
+            newdate.innerHTML += `<input type="date" class="due-date-input" placeholder="Due Date" onchange="updateSubtaskDueDate(${taskId}, ${subtaskId}, this.value)" />`;
+            statusSelect.innerHTML += `<select onchange="updateSubtaskStatus(${taskId}, ${subtaskId}, this.value)">
+                <option value="Not Started">Not Started</option>
+                <option value="In Progress">In Progress</option>
+                <option value="Completed">Completed</option>
+            </select>`;
+            taskPriority.innerHTML += `<select onchange="updateSubtaskPriority(${taskId}, ${subtaskId}, this.value)">
+                <option value="Low">Low</option>
+                <option value="Medium">Medium</option>
+                <option value="High">High</option>
+            </select>`;
+            fileUpload.innerHTML += `<input type="file" onchange="uploadFilesForSubtask(${taskId}, ${subtaskId}, this)" />`;
+
+            const subtaskContainer = taskRow.querySelector(`#subtask-container-${taskId}`);
+            subtaskContainer.appendChild(subtaskDiv);
+        }
+
+     
+
+        function showSubSubtaskInput(taskId, subtaskId) {
+            const subSubtaskContainer = document.getElementById(`sub-subtask-container-${taskId}-${subtaskId}`);
+            const subSubtaskNameInput = document.createElement('input');
+            subSubtaskNameInput.type = 'text';
+            subSubtaskNameInput.placeholder = 'New Sub-subtask';
+            let added = false; // Flag to prevent double addition
+
+            const addSubSubtask = () => {
+                if (!added) {
+                    added = true; // Set flag to true
+                    const subSubtaskName = subSubtaskNameInput.value;
+                    if (subSubtaskName) {
+                        addSubSubtaskToContainer(taskId, subtaskId, subSubtaskName);
+                        subSubtaskContainer.removeChild(subSubtaskNameInput); // Remove input after adding sub-subtask
+                    }
+                }
+            };
+
+            subSubtaskNameInput.onblur = addSubSubtask;
+            subSubtaskNameInput.onkeypress = function(event) {
+                if (event.key === 'Enter') {
+                    addSubSubtask();
+                }
+            };
+
+            subSubtaskContainer.appendChild(subSubtaskNameInput);
+            subSubtaskNameInput.focus(); // Focus on the input for immediate typing
+            subSubtaskContainer.style.display = 'block'; // Show sub-subtask container
+        }
+
+        // Function to show sub-subtask input
+       
+    
+    
+        // Function to add sub-subtask to the container
+        function addSubSubtaskToContainer(taskId, subtaskId, subSubtaskName) {
+            subSubtaskCount[`${taskId}-${subtaskId}`] = (subSubtaskCount[`${taskId}-${subtaskId}`] || 0) + 1;
+            const subSubtaskId = subSubtaskCount[`${taskId}-${subtaskId}`];
+            const assigneeDynamic = document.querySelector('.assigneeNames');
+            const newdate = document.querySelector('.newdate');
+            const statusSelect = document.querySelector('.statusSelect');
+            const taskPriority = document.querySelector('.task-priority')
+            const subtaskDiv = document.createElement('div');
+            const fileUpload = document.querySelector('.fileUpload');
+
+
+            const subSubtaskDiv = document.createElement('div');
+            subSubtaskDiv.className = 'sub-subtask';
+            subSubtaskDiv.innerHTML = `
+                Sub-subtask ${subSubtaskId}: ${subSubtaskName}
+                <button class="btn btn1" onclick="editSubSubtask(${taskId}, ${subtaskId}, ${subSubtaskId})">✎</button>
+                <button class="btn btn1" onclick="deleteSubSubtask(${taskId}, ${subtaskId}, ${subSubtaskId})"><i class="fa-solid fa-trash"></i></button>
+
+                </div>
+            `;
+               
+            assigneeDynamic.innerHTML+=`<button class="btn" onclick="addAssigneeToSubtask(${taskId}, ${subtaskId})">Add Assignee</button>`
+            newdate.innerHTML+=`<input type="date" class="due-date-input" placeholder="Due Date" onchange="updateSubtaskDueDate(${taskId}, ${subtaskId}, this.value)" />`
+            statusSelect.innerHTML+=`<select onchange="updateSubtaskStatus(${taskId}, ${subtaskId}, this.value)">
+                            <option value="Not Started">Not Started</option>
+                            <option value="In Progress">In Progress</option>
+                            <option value="Completed">Completed</option>
+                        </select>`
+            taskPriority.innerHTML+=` <select onchange="updateSubtaskPriority(${taskId}, ${subtaskId}, this.value)">
+                            <option value="Low">Low</option>
+                            <option value="Medium">Medium</option>
+                            <option value="High">High</option>
+                        </select>`
+            fileUpload.innerHTML+=`<input type="file" onchange="uploadFilesForSubtask(${taskId}, ${subtaskId}, this)" />`
+
+            const subSubtaskContainer = document.getElementById(`sub-subtask-container-${taskId}-${subtaskId}`);
+            subSubtaskContainer.appendChild(subSubtaskDiv);
+        }
+
+        function updateSubtaskDueDate(taskId, subtaskId, dueDate) {
+            console.log(`Subtask ${subtaskId} of Task ${taskId} has Due Date: ${dueDate}`);
+        }
+
+        // Update Status for subtask
+        function updateSubtaskStatus(taskId, subtaskId, status) {
+            console.log(`Subtask ${subtaskId} of Task ${taskId} has Status: ${status}`);
+        }
+
+        // Update Priority for subtask
+        function updateSubtaskPriority(taskId, subtaskId, priority) {
+            console.log(`Subtask ${subtaskId} of Task ${taskId} has Priority: ${priority}`);
+        }
+
+        // Upload Files for subtask
+        function uploadFilesForSubtask(taskId, subtaskId, fileInput) {
+            const file = fileInput.files[0];
+            console.log(`File uploaded for Subtask ${subtaskId} of Task ${taskId}:`, file);
+        }
+
+
+        // Function to edit subtask
+        function editSubtask(taskId, subtaskId) {
+            const subtaskDiv = document.querySelector(`#subtask-container-${taskId} .subtask:nth-child(${subtaskId})`);
+            const subtaskName = subtaskDiv.childNodes[0].textContent.split(': ')[1].trim();
+            const subtaskInput = document.createElement('input');
+            subtaskInput.type = 'text';
+            subtaskInput.value = subtaskName;
+
+            subtaskInput.onblur = function() {
+                saveSubtaskName(subtaskDiv, subtaskInput, taskId, subtaskId);
+            };
+
+            subtaskInput.onkeypress = function(event) {
+                if (event.key === 'Enter') {
+                    saveSubtaskName(subtaskDiv, subtaskInput, taskId, subtaskId);
+                }
+            };
+ 
+            subtaskDiv.replaceChild(subtaskInput, subtaskDiv.childNodes[0]);
+            subtaskInput.focus();
+        }
+
+        // Function to save edited subtask name
+        function saveSubtaskName(subtaskDiv, subtaskInput, taskId, subtaskId) {
+            const newName = subtaskInput.value.trim();
+            if (newName) {
+                subtaskDiv.childNodes[0].textContent = `Subtask ${subtaskId}: ${newName}`;
+            }
+            subtaskDiv.replaceChild(document.createTextNode(`Subtask ${subtaskId}: ${newName}`), subtaskInput);
+        }
+
+        // Function to delete subtask
+        function deleteSubtask(taskId, subtaskId) {
+            const subtaskDiv = document.querySelector(`#subtask-container-${taskId} .subtask:nth-child(${subtaskId})`);
+            if (subtaskDiv) {
+                subtaskDiv.remove();
+            }
+        }
+
+        // Function to edit sub-subtask
+        function editSubSubtask(taskId, subtaskId, subSubtaskId) {
+            const subSubtaskDiv = document.querySelector(`#sub-subtask-container-${taskId}-${subtaskId} .sub-subtask:nth-child(${subSubtaskId})`);
+            const subSubtaskName = subSubtaskDiv.childNodes[0].textContent.split(': ')[1].trim();
+            const subSubtaskInput = document.createElement('input');
+            subSubtaskInput.type = 'text';
+            subSubtaskInput.value = subSubtaskName;
+
+            subSubtaskInput.onblur = function() {
+                saveSubSubtaskName(subSubtaskDiv, subSubtaskInput, taskId, subtaskId, subSubtaskId);
+            };
+
+            subSubtaskInput.onkeypress = function(event) {
+                if (event.key === 'Enter') {
+                    saveSubSubtaskName(subSubtaskDiv, subSubtaskInput, taskId, subtaskId, subSubtaskId);
+                }
+            };
+
+            subSubtaskDiv.replaceChild(subSubtaskInput, subSubtaskDiv.childNodes[0]);
+            subSubtaskInput.focus();
+        }
+
+        // Function to save edited sub-subtask name
+        function saveSubSubtaskName(subSubtaskDiv, subSubtaskInput, taskId, subtaskId, subSubtaskId) {
+            const newName = subSubtaskInput.value.trim();
+            if (newName) {
+                subSubtaskDiv.childNodes[0].textContent = `Sub-subtask ${subSubtaskId}: ${newName}`;
+            }
+            subSubtaskDiv.replaceChild(document.createTextNode(`Sub-subtask ${subSubtaskId}: ${newName}`), subSubtaskInput);
+        }
+
+        // Function to delete sub-subtask
+        function deleteSubSubtask(taskId, subtaskId, subSubtaskId) {
+            const subSubtaskDiv = document.querySelector(`#sub-subtask-container-${taskId}-${subtaskId} .sub-subtask:nth-child(${subSubtaskId})`);
+            if (subSubtaskDiv) {
+                subSubtaskDiv.remove();
+            }
+        }
+
+        function addAssigneeToSubtask(taskId, subtaskId) {
+            const assigneeName = prompt(`Enter Assignee Name for Subtask ${subtaskId}`);
+            if (assigneeName) {
+                // Find the task row (assumed that taskId corresponds to a row in the task table)
+                const taskRow = document.querySelector(`#task-table-body tr[data-task-id="${taskId}"]`);
+
+                // Ensure the assignee column exists in the task row
+                const assigneeColumn = taskRow.querySelector('.assignee-column');
+                
+                // If assignee column exists, add the assignee
+                if (assigneeColumn) {
+                    const assigneeContainer = document.createElement('div');
+                    assigneeContainer.classList.add('assignee');
+                    assigneeContainer.innerHTML = `
+                        ${assigneeName} 
+                        <button class="edit-btn" onclick="editAssigneeForSubtask(${taskId}, ${subtaskId}, '${assigneeName}')">Edit</button>
+                        <button class="delete-assignee-btn" onclick="deleteAssigneeFromSubtask(${taskId}, ${subtaskId})">-</button>
+                    `;
+                    assigneeColumn.appendChild(assigneeContainer);  // Append the assignee to the assignee column of the task
+                } else {
+                    console.error("Assignee column not found in the task row.");
+                }
+            }
+        }
+
+
+        function editAssigneeForSubtask(taskId, subtaskId, currentAssignee) {
+            const newAssignee = prompt("Change assignee", currentAssignee);
+            if (newAssignee) {
+                const subtaskDiv = document.querySelector(`#subtask-container-${taskId} .subtask:nth-child(${subtaskId})`);
+                const assigneeElement = subtaskDiv.querySelector('.assignee p');
+                assigneeElement.textContent = newAssignee;
+            }
+        }
+
+        function deleteAssigneeFromSubtask(taskId, subtaskId) {
+            const subtaskDiv = document.querySelector(`#subtask-container-${taskId} .subtask:nth-child(${subtaskId})`);
+            const assigneeContainer = subtaskDiv.querySelector('.assignee');
+            if (assigneeContainer) {
+                assigneeContainer.remove();
+            }
+        }
+
+        // Function to add assignee to sub-subtask
+        function addAssigneeToSubSubtask(taskId, subtaskId, subSubtaskId) {
+            const assigneeName = prompt(`Enter Assignee Name for Sub-subtask ${subSubtaskId}`);
+            if (assigneeName) {
+                const subSubtaskDiv = document.querySelector(`#sub-subtask-container-${taskId}-${subtaskId} .sub-subtask:nth-child(${subSubtaskId})`);
+                const assigneeContainer = document.createElement('div');
+                assigneeContainer.classList.add('assignee');
+                assigneeContainer.innerHTML = `${assigneeName}
+                    <button class="edit-btn" onclick="editAssignee(${taskId}, ${subtaskId}, ${subSubtaskId}, '${assigneeName}')">Edit</button>
+                    <button class="delete-assignee-btn" onclick="deleteAssignee(${taskId}, ${subtaskId}, ${subSubtaskId})">-</button>`;
+                subSubtaskDiv.appendChild(assigneeContainer);
+            }
+        }
+
+        function deleteAssignee(taskId, subtaskId) {
+            const assigneeContainer = document.querySelector(`#task-table-body tr[data-task-id="${taskId}"] .assignee`);
+            if (assigneeContainer) {
+                assigneeContainer.remove();
+            }
+        }
+
+        // Function to delete assignee from sub-subtask
+        function deleteAssignee(taskId, subtaskId, subSubtaskId) {
+            const assigneeContainer = document.querySelector(`#sub-subtask-container-${taskId}-${subtaskId} .sub-subtask:nth-child(${subSubtaskId}) .assignee`);
+            if (assigneeContainer) {
+                assigneeContainer.remove();
+            }
+        }
+
+        function deleadte(assignee){
+            const thisdor = document.querySelector('.subsuta')
+        }
+
+  </script>
+  <script src="common.js"></script>
+
+</body>
+</html>
+
+<!-- ------------ CSS------------------------------------------------------------------------------------------------------ -->
+body{
+    background-color: white !important;
+}
+
+.addTaskdiv {
+    margin-top: 10px;
+    width: 100%; /* Ensure the container is responsive */
+    overflow: hidden; /* Hide content that overflows */
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 12px;
+    font-family: Arial, sans-serif;
+    table-layout: fixed; /* Prevents table from growing beyond container width */
+    word-wrap: break-word; /* Wraps text inside cells to avoid overflow */
+}
+
+th, td {
+    border: 1px solid #ffffff;
+    border-bottom: 1px solid rgb(240, 240, 240);
+    padding: 8px;
+    text-align: left;
+    word-wrap: break-word; /* Ensure long content is wrapped inside cells */
+}
+
+th {
+    background-color: #ffffff;
+    color: #333;
+}
+
+tr:nth-child(even) {
+    background-color: #ffffff;
+}
+
+tr:hover {
+    background-color: #f4f3f3;
+}
+
+/* Optional: If you'd like to add scrolling to the table body only without affecting the header */
+table tbody {
+    display: block;
+    overflow-y: auto; /* Enable vertical scrolling if content exceeds max-height */
+    width: 100%;
+}
+
+table thead, table tbody tr {
+    display: table;
+    width: 100%;
+    table-layout: fixed; /* Prevent the columns from resizing */
+}
+
+.subtask-container, .sub-subtask-container {
+    display: none;
+    padding-left: 15px;
+    margin-top: 5px;
+}
+
+.btn {
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    padding: 2px 6px;
+    cursor: pointer;
+    font-size: 12px;
+    margin-left: 5px;
+}
+
+.btn1{
+   height: 20px; 
+   padding: 2px;
+   width: 20px;
+}
+
+input{
+    padding: 3px;
+    width: 10vw;
+    border: 1px solid #dedddd;
+    border-radius: 4px;
+}
+
+input:focus{
+    outline: none;
+    border-color: #4CAF50;
+}
+
+.subtask, .sub-subtask {
+    margin-top: 2px;
+}
+
+.sub-subtask-container {
+    padding-left: 30px;
+}
+
+.add-task-btn-container {
+    padding-bottom: 10px;
+}
+
+.task-input {
+    width: calc(100% - 60px);
+    border: 1px solid #dedddd;
+    padding: 5px;
+    border-radius: 4px;
+}
+
+.task-input:focus {
+    outline: none;
+    border-color: #4CAF50;
+}
+
+.flexitems3 {
+    display: flex;
+    align-items: center;
+}
+
+.dflex{
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.edit-btn{
+    border-radius: 2px;
+    background: #7cb067;
+    border: none;
+    width: 36px;
+    color: #ffffff;
+}
+
+.forCenter{
+    text-align: center;
+}
+
+select{
+    border-radius: 4px;
+    width: 7vw;
+    padding: 4px;
+    border: 1px solid #dedddd;
+
+}

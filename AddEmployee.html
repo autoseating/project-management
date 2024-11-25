@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Project Management</title>
+  <!-- Google Font for professional look -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+  <!-- Material Icons for Hamburger Icon and Dropdown -->
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <script src="https://kit.fontawesome.com/4b2636911a.js" crossorigin="anonymous"></script>
+  <link rel="stylesheet" href="Css/AddProject.css">
+  <link rel="stylesheet" href="common.css"> 
+  <style>
+    table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+    table, th, td {
+        border: 1px solid rgb(201, 201, 201);
+    }
+
+    th, td {
+        padding: 10px;
+        text-align: center;
+    }
+
+    tr, th, p{
+      font-weight: 400;
+    }
+
+    .trp{
+      font-weight: 500;
+    }
+
+</style>
+
+
+</head>
+<body>
+
+  <!-- Navbar -->
+  <div class="navbar">
+    <button class="btn" id="toggleSidebarBtn">
+      <span class="material-icons">menu</span> <!-- Hamburger Icon -->
+    </button>
+    <p>Allabout Seat</p>
+  </div>
+
+  <!-- Sidebar -->
+  <div class="sidebar" id="sidebar">
+    <div class="sidebar-header">
+      <div class="dflex spacbtw" style="width: 100%;">
+        <p>Project Management</p>
+        <button class="close-btn" id="closeSidebarBtn"><i class="fa-solid fa-chevron-left"></i></button>
+      </div>
+    </div>
+    <ul>
+      <li><a href="ProjectManagement.html">Home</a></li>
+      <li><a href="AddEmployee.html">Add Employee</a></li>
+      <li><a href="AddProject.html">Add Project</a></li>
+      <li><a href="AddTask.html">Add Task</a></li>
+    </ul>
+
+    <!-- Dropdown for Projects -->
+    <div class="spaces-container" id="projectsDropdown">
+    
+      <div class="space-container">
+       <div class="dflex" style=" margin-bottom: 4px; justify-content: space-between; padding: 4px; border-radius: 4px; background-color: rgba(240, 248, 255, 0.14);">
+         <small>Spaces</small> <div> <button class="addSpacesBtn">+</button></div>
+       </div>
+      </div>
+ 
+      <div class="space-list-container">
+       <div class="dflex for-marb" style="justify-content: space-between; padding: 4px; border-radius: 4px;">
+         <small>
+           <button class="space-list-dropdown-btn">
+             <i class="fa-solid fa-caret-down space-list-dropdown"></i>
+           </button> 
+           Space Name
+         </small>
+         <div> 
+           <button class="add-spaces-list-Btn">+</button>
+         </div>
+       </div>
+       <div class="spaces-projects-container">
+         <div class="dflex for-marb" style="justify-content: space-between; padding: 4px; border-radius: 4px; padding-left: 20px;">
+           <small> 
+             <button class="project-options-btn"><i class="fa-solid fa-list"></i></button> Project Name
+           </small> 
+           <div> 
+             <button class="project-auth-btn"><i class="fa-solid fa-ellipsis"></i></button>
+           </div>
+         </div>
+ 
+         <div class="dflex for-marb" style="justify-content: space-between; padding: 4px; border-radius: 4px; padding-left: 20px;">
+           <small> 
+             <button class="project-options-btn"><i class="fa-solid fa-list"></i></button> Project Name
+           </small> 
+           <div> 
+             <button class="project-auth-btn"><i class="fa-solid fa-ellipsis"></i></button>
+           </div>
+         </div>
+ 
+         <!-- More projects can be listed here -->
+       </div>
+     </div>
+     
+     <!-- Duplicate the space list container as needed -->
+     <div class="space-list-container">
+       <div class="dflex for-marb" style="justify-content: space-between; padding: 4px; border-radius: 4px;">
+         <small>
+           <button class="space-list-dropdown-btn">
+             <i class="fa-solid fa-caret-down space-list-dropdown"></i>
+           </button> 
+           Space Name
+         </small>
+         <div> 
+           <button class="add-spaces-list-Btn">+</button>
+         </div>
+       </div>
+       <div class="spaces-projects-container">
+         <div class="dflex for-marb" style="justify-content: space-between; padding: 4px; border-radius: 4px; padding-left: 20px;">
+           <small> 
+             <button class="project-options-btn"><i class="fa-solid fa-list"></i></button> Project Name
+           </small> 
+           <div> 
+             <button class="project-auth-btn"><i class="fa-solid fa-ellipsis"></i></button>
+           </div>
+         </div>
+         <div class="dflex for-marb" style="justify-content: space-between; padding: 4px; border-radius: 4px; padding-left: 20px;">
+           <small> 
+             <button class="project-options-btn"><i class="fa-solid fa-list"></i></button> Project Name
+           </small> 
+           <div> 
+             <button class="project-auth-btn"><i class="fa-solid fa-ellipsis"></i></button>
+           </div>
+         </div>
+         <!-- More projects can be listed here -->
+       </div>
+     </div>
+ 
+     <div class="space-list-container">
+       <div class="dflex for-marb" style="justify-content: space-between; padding: 4px; border-radius: 4px;">
+         <small>
+           <button class="space-list-dropdown-btn">
+             <i class="fa-solid fa-caret-down space-list-dropdown"></i>
+           </button> 
+           Space Name
+         </small>
+         <div> 
+           <button class="add-spaces-list-Btn">+</button>
+         </div>
+       </div>
+       <div class="spaces-projects-container">
+         <div class="dflex for-marb" style="justify-content: space-between; padding: 4px; border-radius: 4px; padding-left: 20px;">
+           <small> 
+             <button class="project-options-btn"><i class="fa-solid fa-list"></i></button> Project Name
+           </small> 
+           <div> 
+             <button class="project-auth-btn"><i class="fa-solid fa-ellipsis"></i></button>
+           </div>
+         </div>
+         <div class="dflex for-marb" style="justify-content: space-between; padding: 4px; border-radius: 4px; padding-left: 20px;">
+           <small> 
+             <button class="project-options-btn"><i class="fa-solid fa-list"></i></button> Project Name
+           </small> 
+           <div> 
+             <button class="project-auth-btn"><i class="fa-solid fa-ellipsis"></i></button>
+           </div>
+         </div>
+         <!-- More projects can be listed here -->
+       </div>
+     </div>
+     </div>
+  </div>
+
+  <!-- Main Container -->
+  <div class="mainContainer addProject" style="align-items: baseline;">
+    <div class="addprojectBody">
+      
+        <div class="addProjectNav">
+            <p>Add New Employee</p>
+        </div>
+
+        <!-- ----------------Add Project Form -------------------------------------------->
+        <div class="addProjectForm">
+            <!------------------ Left Side ------------------------------------------------ -->
+            <div class="addProjectleft">
+                <!-- ---------------- Project Name ---------------------------------------- -->
+                <div class="addProjectField ProjectName">
+                    <label class="form-label">Employee Name</label>
+                    <br>
+                    <input type="text" class="form-control form-control1st" placeholder="Enter Employee Name">
+                </div>
+
+
+                <div class="addProjectField ProjectName">
+                  <label class="form-label">Login ID</label>
+                  <br>
+                  <input type="text" class="form-control form-control1st" placeholder="Enter Login ID">
+                </div>
+
+                <div class="addProjectField ProjectName">
+                  <label class="form-label">Email ID</label>
+                  <br>
+                  <input type="text" class="form-control form-control1st" placeholder="Enter Login ID">
+                </div>
+
+                <!-- <div class="addProjectField ProjectName dflex" style="gap: 40%;">
+                  <div>
+                    <label class="form-label">Set Permission</label>
+                    <br>
+                    <label for="">Master</label>
+                    <br>
+                    <input type="checkbox" name="" id="">
+                  </div>
+                  <div>
+                    <label class="form-label">Set Permission</label>
+                    <br>
+                    <label for="">Employees</label>
+                    <br>
+                    <input type="checkbox" name="" id="">
+                  </div>
+                </div> -->
+               
+            </div>
+
+            <!-- ---------------- Right Side ----------------------------------------- -->
+            <div class="addProjectright">
+                <!-- ---------------- Client Name -------------------------------------- -->
+                <div class="addProjectField ProjectName">
+                    <label class="form-label">Employee Role</label>
+                    <br>
+                    <input type="text" class="form-control form-control1st" placeholder="Enter Employee Role">
+                </div>
+
+                <div class="addProjectField ProjectName">
+                  <label class="form-label">Password</label>
+                  <br>
+                  <input type="text" class="form-control form-control1st" placeholder="Enter Password">
+                </div>
+
+                <div class="addProjectField ProjectName">
+                  <label class="form-label">Phone No</label>
+                  <br>
+                  <input type="number" class="form-control form-control1st" placeholder="Phone No">
+                </div>
+
+              
+            </div>
+            
+    </div>
+
+    <hr style="margin-bottom: 10px; margin-top: -20px; border: 1px solid rgb(237, 237, 238);">
+
+
+            <div>
+              <table>
+                  <thead>
+                      <tr>
+                          <th><p class="trp">Project Permission</p></th>
+                          <th><p class="trp">Read</p></th>
+                          <th><p class="trp">Write</p></th>
+                          <th><p class="trp">Create</p></th>
+                          <th><p class="trp">Delete</p></th>
+                          <th><p class="trp">Import</p></th>
+                          <th><p class="trp">Export</p></th>
+                      </tr>
+                  </thead>
+                  <tbody>
+                      <tr>
+                          <td><p>Projects</p></td>
+                          <td><input type="checkbox"></td>
+                          <td><input type="checkbox"></td>
+                          <td><input type="checkbox"></td>
+                          <td><input type="checkbox"></td>
+                          <td><input type="checkbox"></td>
+                          <td><input type="checkbox"></td>
+                      </tr>
+                      <tr>
+                          <td><p>Tasks</p></td>
+                          <td><input type="checkbox"></td>
+                          <td><input type="checkbox"></td>
+                          <td><input type="checkbox"></td>
+                          <td><input type="checkbox"></td>
+                          <td><input type="checkbox"></td>
+                          <td><input type="checkbox"></td>
+                      </tr>
+                      <tr>
+                          <td><p>Chat</p></td>
+                          <td><input type="checkbox"></td>
+                          <td><input type="checkbox"></td>
+                          <td><input type="checkbox"></td>
+                          <td><input type="checkbox"></td>
+                          <td><input type="checkbox"></td>
+                          <td><input type="checkbox"></td>
+                      </tr>
+                      <tr>
+                          <td><p>Estimates</p></td>
+                          <td><input type="checkbox"></td>
+                          <td><input type="checkbox"></td>
+                          <td><input type="checkbox"></td>
+                          <td><input type="checkbox"></td>
+                          <td><input type="checkbox"></td>
+                          <td><input type="checkbox"></td>
+                      </tr>
+                      <tr>
+                          <td><p>Invoices</p></td>
+                          <td><input type="checkbox"></td>
+                          <td><input type="checkbox"></td>
+                          <td><input type="checkbox"></td>
+                          <td><input type="checkbox"></td>
+                          <td><input type="checkbox"></td>
+                          <td><input type="checkbox"></td>
+                      </tr>
+                      <tr>
+                          <td><p>Timing Sheets</p></td>
+                          <td><input type="checkbox"></td>
+                          <td><input type="checkbox"></td>
+                          <td><input type="checkbox"></td>
+                          <td><input type="checkbox"></td>
+                          <td><input type="checkbox"></td>
+                          <td><input type="checkbox"></td>
+                      </tr>
+                  </tbody>
+              </table>
+            </div>
+            <div class="dflex" style="gap: 10px; float: right; margin-top: 10px;" >
+              <button style="cursor:pointer">
+                 Submit
+              </button>
+              <button style="cursor:pointer">
+                 Cancel
+              </button>
+            </div>
+  </div>
+  
+  <script src="common.js"></script>
+
+</body>
+</html>

@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Project Management</title>
+  <!-- Google Font for professional look -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+  <!-- Material Icons for Hamburger Icon and Dropdown -->
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <script src="https://kit.fontawesome.com/4b2636911a.js" crossorigin="anonymous"></script>
+  <link rel="stylesheet" href="Css/AddProject.css">
+  <link rel="stylesheet" href="common.css">
+</head>
+<body>
+
+  <!-- Navbar -->
+  <div class="navbar">
+    <button class="btn" id="toggleSidebarBtn">
+      <span class="material-icons">menu</span> <!-- Hamburger Icon -->
+    </button>
+    <p>Allabout Seat</p>
+  </div>
+
+  <!-- Sidebar -->
+  <div class="sidebar" id="sidebar">
+    <div class="sidebar-header">
+        <div class="dflex spacbtw" style="width: 100%;">
+          <p>Project Management</p>
+          <button class="close-btn" id="closeSidebarBtn"><i class="fa-solid fa-chevron-left"></i></button>
+        </div>
+    </div>
+    <ul>
+      <li><a href="ProjectManagement.html">Home</a></li>
+      <li><a href="AddEmployee.html">Add Employee</a></li>
+      <li><a href="AddProject.html">Add Project</a></li>
+      <li><a href="AddTask.html">Add Task</a></li>
+    </ul>
+
+    <!-- Dropdown for Projects -->
+    <div class="spaces-container" id="projectsDropdown">
+
+        <div class="space-container">
+         <div class="dflex" style=" margin-bottom: 4px; justify-content: space-between; padding: 4px; border-radius: 4px; background-color: rgba(240, 248, 255, 0.14);">
+           <small>Spaces</small> <div> <button class="addSpacesBtn">+</button></div>
+         </div>
+        </div>
+
+        <div class="space-list-container">
+         <div class="dflex for-marb" style="justify-content: space-between; padding: 4px; border-radius: 4px;">
+           <small>
+             <button class="space-list-dropdown-btn">
+               <i class="fa-solid fa-caret-down space-list-dropdown"></i>
+             </button> 
+             Space Name                               
+           </small>
+           <div> 
+             <button class="add-spaces-list-Btn">+</button>
+           </div>
+         </div>
+         <div class="spaces-projects-container">
+           <div class="dflex for-marb" style="justify-content: space-between; padding: 4px; border-radius: 4px; padding-left: 20px;">
+             <small> 
+               <button class="project-options-btn"><i class="fa-solid fa-list"></i></button> Project Name
+             </small> 
+             <div> 
+               <button class="project-auth-btn"><i class="fa-solid fa-ellipsis"></i></button>
+             </div>
+           </div>
+
+           <div class="dflex for-marb" style="justify-content: space-between; padding: 4px; border-radius: 4px; padding-left: 20px;">
+             <small> 
+               <button class="project-options-btn"><i class="fa-solid fa-list"></i></button> Project Name
+             </small> 
+             <div> 
+               <button class="project-auth-btn"><i class="fa-solid fa-ellipsis"></i></button>
+             </div>
+           </div>
+
+           <!-- More projects can be listed here -->
+         </div>
+       </div>
+
+       <!-- Duplicate the space list container as needed -->
+       <div class="space-list-container">
+         <div class="dflex for-marb" style="justify-content: space-between; padding: 4px; border-radius: 4px;">
+           <small>
+             <button class="space-list-dropdown-btn">
+               <i class="fa-solid fa-caret-down space-list-dropdown"></i>
+             </button> 
+             Space Name
+           </small>
+           <div> 
+             <button class="add-spaces-list-Btn">+</button>
+           </div>
+         </div>
+         <div class="spaces-projects-container">
+           <div class="dflex for-marb" style="justify-content: space-between; padding: 4px; border-radius: 4px; padding-left: 20px;">
+             <small> 
+               <button class="project-options-btn"><i class="fa-solid fa-list"></i></button> Project Name
+             </small> 
+             <div> 
+               <button class="project-auth-btn"><i class="fa-solid fa-ellipsis"></i></button>
+             </div>
+           </div>
+           <div class="dflex for-marb" style="justify-content: space-between; padding: 4px; border-radius: 4px; padding-left: 20px;">
+             <small> 
+               <button class="project-options-btn"><i class="fa-solid fa-list"></i></button> Project Name
+             </small> 
+             <div> 
+               <button class="project-auth-btn"><i class="fa-solid fa-ellipsis"></i></button>
+             </div>
+           </div>
+           <!-- More projects can be listed here -->
+         </div>
+       </div>
+
+       <div class="space-list-container">
+         <div class="dflex for-marb" style="justify-content: space-between; padding: 4px; border-radius: 4px;">
+           <small>
+             <button class="space-list-dropdown-btn">
+               <i class="fa-solid fa-caret-down space-list-dropdown"></i>
+             </button> 
+             Space Name
+           </small>
+           <div> 
+             <button class="add-spaces-list-Btn">+</button>
+           </div>
+         </div>
+         <div class="spaces-projects-container">
+           <div class="dflex for-marb" style="justify-content: space-between; padding: 4px; border-radius: 4px; padding-left: 20px;">
+             <small> 
+               <button class="project-options-btn"><i class="fa-solid fa-list"></i></button> Project Name
+             </small> 
+             <div> 
+               <button class="project-auth-btn"><i class="fa-solid fa-ellipsis"></i></button>
+             </div>
+           </div>
+           <div class="dflex for-marb" style="justify-content: space-between; padding: 4px; border-radius: 4px; padding-left: 20px;">
+             <small> 
+               <button class="project-options-btn"><i class="fa-solid fa-list"></i></button> Project Name
+             </small> 
+             <div> 
+               <button class="project-auth-btn"><i class="fa-solid fa-ellipsis"></i></button>
+             </div>
+           </div>
+           <!-- More projects can be listed here -->
+         </div>
+       </div>
+</div>
+</div>
+
+  <!-- Main Container -->
+  <div class="mainContainer addProject">
+    <div class="addprojectBody">
+        <div class="addProjectNav">
+            <p>Add New Project</p>
+        </div>
+
+        <!-- ----------------Add Project Form -------------------------------------------->
+        <div class="addProjectForm">
+            <!------------------ Left Side ------------------------------------------------ -->
+            <div class="addProjectleft">
+                <!-- ---------------- Project Name ---------------------------------------- -->
+                <div class="addProjectField ProjectName">
+                    <label class="form-label">Project Name:</label>
+                    <br>
+                    <input type="text" class="form-control form-control1st" placeholder="Enter Project Name">
+                </div>
+
+                <!-- ---------------- Start Date ------------------------------------------ -->
+                <div class="addProjectField Dates">
+                    <label class="form-label">Start Date:</label>
+                    <br>
+                    <input type="text" class="form-control form-control1st" placeholder="Enter Start Date">
+                </div>
+
+                <!-- --------------- Payment Info ---------------------------------------- -->
+                <div class="addProjectField PaymentInfo">
+                    <div class="PaymetInfo dflex" style="gap: 20px;">
+                        <div class="rate">
+                            <label class="form-label">Rate</label>
+                            <br>
+                            <input type="Number" class="form-control form-control1st" placeholder="Enter Rate">
+                        </div>
+                        <div class="cycles">
+                            <label class="form-label">Cycles</label>
+                            <br>
+                            <select class="form-control form-control1st">
+                                <option value="">Select</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ---------------- Project Leader ------------------------------------- -->
+                <div class="addProjectField Leader">
+                    <label class="form-label">Add Project Leader:</label>
+                    <br>
+                    <input type="text" class="form-control form-control1st" placeholder="Enter Project Leader Name">
+                </div>
+
+                <!-- ---------------- Add Team ------------------------------------------ -->
+                <div class="addProjectField AddTeam">
+                    <label class="form-label">Add Team:</label>
+                    <br>
+                    <input type="text" class="form-control form-control1st" placeholder="Enter Team Members">
+                </div>
+            </div>
+
+            <!------------------- Right Side -------------------------------------------->
+            <div class="addProjectright">
+                <!------------------- Client Name ----------------------------------------->
+                <div class="addProjectField ProjectName">
+                    <label class="form-label">Client Name:</label>
+                    <br>
+                    <input type="text" class="form-control form-control1st" placeholder="Enter Client Name">
+                </div>
+
+                <!------------------- End Date ------------------------------------------->
+                <div class="addProjectField Dates">
+                    <label class="form-label">End Date:</label>
+                    <br>
+                    <input type="text" class="form-control form-control1st" placeholder="Enter End Date">
+                </div>
+
+                <!------------------- Priority ------------------------------------------->
+                <div class="addProjectField Priority">
+                    <label class="form-label">Priority</label>
+                    <br>
+                    <select class="form-control form-control1st">
+                        <option value="">Priority</option>
+                    </select>
+                </div>
+
+                <!-- ---------------- Add Team Members Icons ------------------------------->
+                <div class="addProjectField AddTeam" style="width: 100%;">
+                    <label class="form-label">Team Members</label>
+                    <br>
+                    <div class="addTeamIcons dflex" style="cursor: pointer;">
+                        <div class="team-member-icon"></div>
+                        <div class="team-member-icon"></div>
+                        <div class="team-member-icon"></div>
+                        <div class="team-member-icon"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ---------------- Description Field --------------------------------------->
+        <div class="description" style="width: 100%; margin-bottom: 20px;">
+          <label for="" style="font-size: 0.9rem; font-weight: 500; color: #444; margin-bottom: 8px; display: block;">Description</label>
+          <textarea class="form-control form-control1st" 
+              style="width: 100%; padding: 12px; font-size: 0.875rem; color: #333; background-color: #fff; border: 1px solid #ccc; border-radius: 6px; box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05); resize: vertical; height: 150px; transition: all 0.3s ease; margin-top: 8px; margin-bottom: 20px; max-width: 100%;"></textarea>
+        </div>
+
+        <!-- ---------------- Upload Files Field ----------------------------------------------------------------------------------------->
+        <div class="uploadFiles">
+            <label for="">Upload Files</label>
+            <br>
+            <input type="file" class="form-control form-control1st">
+        </div>
+
+        <div class="  addProjectForm dflex" style="gap: 10px; float: right;">
+          <button>
+             Submit
+          </button>
+          <button>
+             Cancel
+          </button>
+       </div>
+    </div>
+</div>
+
+<script src="common.js"></script>
+
+</body>
+</html>

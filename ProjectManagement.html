@@ -1,0 +1,173 @@
+<!DOCTYPE html>                                 
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Project Management</title>
+  <!-- Google Font for professional look -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+  <!-- Material Icons for Hamburger Icon and Dropdown -->
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <script src="https://kit.fontawesome.com/4b2636911a.js" crossorigin="anonymous"></script>
+  <link rel="stylesheet" href="/Css/Home.css">
+  <link rel="stylesheet" href="common.css"> 
+</head>
+<body>
+
+  <!-- Navbar -->
+  <div class="navbar">
+    <button class="btn" id="toggleSidebarBtn">
+      <span class="material-icons">menu</span> <!-- Hamburger Icon -->
+    </button>
+    <p>Allabout Seat</p>
+  </div>
+
+  <!-- Sidebar -->
+  <div class="sidebar" id="sidebar">
+    <div class="sidebar-header">
+      <div class="dflex spacbtw" style="width: 100%;">
+        <p>Project Management</p>
+        <button class="close-btn" id="closeSidebarBtn"><i class="fa-solid fa-chevron-left"></i></button>
+      </div>
+    </div>
+    <ul>
+      <li><a href="ProjectManagement.html">Home</a></li>
+      <li><a href="AddEmployee.html">Add Employee</a></li>
+      <li><a href="AddProject.html">Add Project</a></li>
+      <li><a href="AddTask.html">Add Task</a></li>
+    </ul>
+
+    <!-- Dropdown for Projects -->
+    <div class="spaces-container" id="projectsDropdown">
+    
+     <div class="space-container">
+      <div class="dflex" style=" margin-bottom: 4px; justify-content: space-between; padding: 4px; border-radius: 4px; background-color: rgba(240, 248, 255, 0.14);">
+        <small>Spaces</small> <div> <button class="addSpacesBtn">+</button></div>
+      </div>
+     </div>
+
+     <div class="space-list-container">
+      <div class="dflex for-marb" style="justify-content: space-between; padding: 4px; border-radius: 4px;">
+        <small>
+          <button class="space-list-dropdown-btn">
+            <i class="fa-solid fa-caret-down space-list-dropdown"></i>
+          </button> 
+          Space Name
+        </small>
+        <div> 
+          <button class="add-spaces-list-Btn">+</button>
+        </div>
+      </div>
+      <div class="spaces-projects-container">
+        <div class="dflex for-marb" style="justify-content: space-between; padding: 4px; border-radius: 4px; padding-left: 20px;">
+          <small> 
+            <button class="project-options-btn"><i class="fa-solid fa-list"></i></button> Project Name
+          </small> 
+          <div> 
+            <button class="project-auth-btn"><i class="fa-solid fa-ellipsis"></i></button>
+          </div>
+        </div>
+
+        <div class="dflex for-marb" style="justify-content: space-between; padding: 4px; border-radius: 4px; padding-left: 20px;">
+          <small> 
+            <button class="project-options-btn"><i class="fa-solid fa-list"></i></button> Project Name
+          </small> 
+          <div> 
+            <button class="project-auth-btn"><i class="fa-solid fa-ellipsis"></i></button>
+          </div>
+        </div>
+
+        <!-- More projects can be listed here -->
+      </div>
+    </div>
+    
+    <!-- Duplicate the space list container as needed -->
+    <div class="space-list-container">
+      <div class="dflex for-marb" style="justify-content: space-between; padding: 4px; border-radius: 4px;">
+        <small>
+          <button class="space-list-dropdown-btn">
+            <i class="fa-solid fa-caret-down space-list-dropdown"></i>
+          </button> 
+          Space Name
+        </small>
+        <div> 
+          <button class="add-spaces-list-Btn">+</button>
+        </div>
+      </div>
+      <div class="spaces-projects-container">
+        <div class="dflex for-marb" style="justify-content: space-between; padding: 4px; border-radius: 4px; padding-left: 20px;">
+          <small> 
+            <button class="project-options-btn"><i class="fa-solid fa-list"></i></button> Project Name
+          </small> 
+          <div> 
+            <button class="project-auth-btn"><i class="fa-solid fa-ellipsis"></i></button>
+          </div>
+        </div>
+        <div class="dflex for-marb" style="justify-content: space-between; padding: 4px; border-radius: 4px; padding-left: 20px;">
+          <small> 
+            <button class="project-options-btn"><i class="fa-solid fa-list"></i></button> Project Name
+          </small> 
+          <div> 
+            <button class="project-auth-btn"><i class="fa-solid fa-ellipsis"></i></button>
+          </div>
+        </div>
+        <!-- More projects can be listed here -->
+      </div>
+    </div>
+
+    <div class="space-list-container">
+      <div class="dflex for-marb" style="justify-content: space-between; padding: 4px; border-radius: 4px;">
+        <small>
+          <button class="space-list-dropdown-btn">
+            <i class="fa-solid fa-caret-down space-list-dropdown"></i>
+          </button> 
+          Space Name
+        </small>
+        <div> 
+          <button class="add-spaces-list-Btn">+</button>
+        </div>
+      </div>
+      <div class="spaces-projects-container">
+        <div class="dflex for-marb" style="justify-content: space-between; padding: 4px; border-radius: 4px; padding-left: 20px;">
+          <small> 
+            <button class="project-options-btn"><i class="fa-solid fa-list"></i></button> Project Name
+          </small> 
+          <div>
+            <button class="project-auth-btn"><i class="fa-solid fa-ellipsis"></i></button>
+          </div>
+        </div>
+        <div class="dflex for-marb" style="justify-content: space-between; padding: 4px; border-radius: 4px; padding-left: 20px;">
+          <small> 
+            <button class="project-options-btn"><i class="fa-solid fa-list"></i></button> Project Name
+          </small> 
+          <div> 
+            <button class="project-auth-btn"><i class="fa-solid fa-ellipsis"></i></button>
+          </div>
+        </div>
+        <!-- More projects can be listed here -->
+      </div>
+    </div>
+
+    </div>
+  </div>
+
+  <!-- Main Container -->
+  <div class="mainContainer">
+    
+    <nav class="navbar" style="border-radius: 4px;">
+      
+    </nav>
+
+    <div class="dflex" style="justify-content: space-evenly; margin-top: 20px;">
+      <div class="cards">Projects (10)</div>
+      <div class="cards">Reports</div>
+      <div class="cards">Documents</div>
+      <div class="cards">Workload by Status</div>
+    </div>
+
+  </div>
+
+  <script src="common.js"></script>
+
+</body>
+</html>
